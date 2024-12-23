@@ -4,7 +4,7 @@ project:
 website:
   title: "blog"
   navbar:
-    right:
+    left:
       - about.qmd
       - icon: github
         href: https://github.com/
