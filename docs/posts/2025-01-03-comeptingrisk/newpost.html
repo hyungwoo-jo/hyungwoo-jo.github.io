@@ -196,15 +196,10 @@ window.Quarto = {
 <section id="competing-risk경쟁-위험" class="level2">
 <h2 class="anchored" data-anchor-id="competing-risk경쟁-위험">Competing Risk(경쟁 위험)</h2>
 <ul>
-<li>여러 종류의 이벤트가 동시에 발생할 수 있으며, 한 종류의 이벤트가 발생하면 다른 이벤트가 발생할 수 없는 상황</li>
-<li>경쟁 위험을 무시하면 <strong>모집단의 생존 함수</strong>나 <strong>이벤트 발생률</strong>을 <strong>과대 혹은 과소평가</strong> 할 위험이 있음</li>
+<li>경쟁 위험: 여러 종류의 이벤트가 동시에 발생할 수 있으며, 한 종류의 이벤트가 발생하면 다른 이벤트가 발생할 수 없는 상황</li>
+<li>경쟁 위험을 무시하면 <strong>모집단의 생존 함수</strong>나 <strong>이벤트 발생률</strong>을 <strong>과대 혹은 과소평가</strong> 할 위험이 있다</li>
 <li>Ex) 암 재발이 event of interest 인 경우 사망이 competing risk로 작용할 수 있다(사망한 암 환자에게는 암 재발이라는 event가 발생 할 수 없기 때문)</li>
-</ul>
-</section>
-<section id="fine-gray-method" class="level2">
-<h2 class="anchored" data-anchor-id="fine-gray-method">Fine-Gray Method</h2>
-<ul>
-<li>가장 대표적이고 자주 사용되는 방법이 Fine-Gray Method</li>
+<li>가장 대표적이고 자주 사용되는 방법이 Fine-Gray Method:</li>
 <li>경쟁 위험 상황에서 event of interest(ex. 암 재발)의 누적 발병률(Cumulative Incidence Function, CIF)를 직접 모델링 하는 통계 기법</li>
 </ul>
 <section id="생존-함수" class="level3">
@@ -221,7 +216,7 @@ S(t) = \prod_{i: t_i \leq t} \left(1 - \frac{d_i}{n_i}\right)
 </p></li>
 <li><p><span class="math inline">\(n_i\)</span>: 시점 <span class="math inline">\(t_i\)</span>에서 위험에 노출된 대상 수<br>
 </p></li>
-<li><p>생좀 함수란 결국 각 사건 발생 시점에서의 생존 확률을 누적 곱하여 계산한 시간 <span class="math inline">\(t\)</span>까지 생존할 확률</p></li>
+<li><p>생존 함수란 결국 각 사건 발생 시점에서의 생존 확률을 누적 곱하여 계산한 시간 <span class="math inline">\(t\)</span>까지 생존할 확률</p></li>
 </ul>
 </section>
 <section id="위험-함수" class="level3">
