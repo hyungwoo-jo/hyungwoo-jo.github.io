@@ -1,0 +1,28 @@
+---
+title: "competing risk 생존분석, fine-and-gray method와 multi-state model"
+description: |
+  competing risk가 존재할 때 생존 분석할 수 있는 fine-and-gray method와 multi-state model을 소개합니다
+  
+image: image.jpg
+categories:
+  - R
+  - statistics
+author:
+  - name: Hyojong Myung
+    url: https://github.com/MyungHyojong
+fig_width: 400
+date: 2024-08-22
+format: html
+execute:
+  freeze: true
+draft: false
+license: CC BY-NC
+---
+
+This is a post with executable code.
+
+```{r}
+library(survival)
+1 + 1
+head(mtcars)
+```

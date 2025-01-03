@@ -1,0 +1,15 @@
+{
+  "hash": "109f61a9fa9ae0821df986c2ce4e5ff1",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"competing risk 생존분석, fine-and-gray method와 multi-state model\"\ndescription: |\n  competing risk가 존재할 때 생존 분석할 수 있는 fine-and-gray method와 multi-state model을 소개합니다\n  \nimage: image.jpg\ncategories:\n  - R\n  - statistics\nauthor:\n  - name: Hyojong Myung\n    url: https://github.com/MyungHyojong\nfig_width: 400\ndate: 2024-08-22\nformat: html\nexecute:\n  freeze: true\ndraft: false\nlicense: CC BY-NC\n---\n\n\n\nThis is a post with executable code.\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(survival)\n1 + 1\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] 2\n```\n\n\n:::\n\n```{.r .cell-code}\nhead(mtcars)\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n                   mpg cyl disp  hp drat    wt  qsec vs am gear carb\nMazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4\nMazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4\nDatsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1\nHornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1\nHornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2\nValiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1\n```\n\n\n:::\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
