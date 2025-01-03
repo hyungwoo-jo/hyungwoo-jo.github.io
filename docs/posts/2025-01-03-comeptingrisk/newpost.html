@@ -153,9 +153,7 @@ window.Quarto = {
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">R</div>
-                <div class="quarto-category">competing risk analysis</div>
-                <div class="quarto-category">finegray</div>
+                <div class="quarto-category">statistics</div>
               </div>
                   </div>
   </div>
@@ -188,7 +186,8 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#competing-risk경쟁-위험" id="toc-competing-risk경쟁-위험" class="nav-link active" data-scroll-target="#competing-risk경쟁-위험">Competing Risk(경쟁 위험)</a></li>
+  <li><a href="#competing-risk경쟁-위험" id="toc-competing-risk경쟁-위험" class="nav-link active" data-scroll-target="#competing-risk경쟁-위험">Competing Risk(경쟁 위험)</a>
+  <ul class="collapse">
   <li><a href="#생존-함수" id="toc-생존-함수" class="nav-link" data-scroll-target="#생존-함수">생존 함수</a></li>
   <li><a href="#위험-함수" id="toc-위험-함수" class="nav-link" data-scroll-target="#위험-함수">위험 함수</a></li>
   <li><a href="#competing-risk가-존재하는-경우-위험-함수subdistribution-hazard-function" id="toc-competing-risk가-존재하는-경우-위험-함수subdistribution-hazard-function" class="nav-link" data-scroll-target="#competing-risk가-존재하는-경우-위험-함수subdistribution-hazard-function">Competing risk가 존재하는 경우 위험 함수(Subdistribution hazard function)</a></li>
@@ -196,6 +195,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#전통적인-방식원인별-위험-함수-기반-cif" id="toc-전통적인-방식원인별-위험-함수-기반-cif" class="nav-link" data-scroll-target="#전통적인-방식원인별-위험-함수-기반-cif">전통적인 방식(원인별 위험 함수 기반 CIF)</a></li>
   <li><a href="#fine-gray-방식" id="toc-fine-gray-방식" class="nav-link" data-scroll-target="#fine-gray-방식">Fine-Gray 방식</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -220,9 +220,8 @@ window.Quarto = {
 <li>가장 대표적이고 자주 사용되는 방법이 Fine-Gray Method:</li>
 <li>경쟁 위험 상황에서 event of interest(ex. 암 재발)의 누적 발병률(Cumulative Incidence Function, CIF)를 직접 모델링 하는 통계 기법</li>
 </ul>
-</section>
-<section id="생존-함수" class="level1">
-<h1>생존 함수</h1>
+<section id="생존-함수" class="level2">
+<h2 class="anchored" data-anchor-id="생존-함수">생존 함수</h2>
 <p><span class="math display">\[
 S(t) = \prod_{i: t_i \leq t} \left(1 - \frac{d_i}{n_i}\right)
 \]</span></p>
@@ -238,8 +237,8 @@ S(t) = \prod_{i: t_i \leq t} \left(1 - \frac{d_i}{n_i}\right)
 <li><p>생존 함수란 결국 각 사건 발생 시점에서의 생존 확률을 누적 곱하여 계산한 시간 <span class="math inline">\(t\)</span>까지 생존할 확률</p></li>
 </ul>
 </section>
-<section id="위험-함수" class="level1">
-<h1>위험 함수</h1>
+<section id="위험-함수" class="level2">
+<h2 class="anchored" data-anchor-id="위험-함수">위험 함수</h2>
 <p><span class="math display">\[
   \lambda_k(t) = \lim_{\Delta t \to 0} \frac{P(t \leq T &lt; t + \Delta t, \epsilon = k \mid T \geq t)}{\Delta t}
   \]</span></p>
@@ -251,13 +250,13 @@ S(t) = \prod_{i: t_i \leq t} \left(1 - \frac{d_i}{n_i}\right)
 <li><p><span class="math inline">\(\epsilon\)</span>: 이벤트 유형 지표(Ex. <span class="math inline">\(\epsilon\)</span> = 1: event of interest, <span class="math inline">\(\epsilon\)</span> = 2: competing risk )</p></li>
 </ul>
 </section>
-<section id="competing-risk가-존재하는-경우-위험-함수subdistribution-hazard-function" class="level1">
-<h1>Competing risk가 존재하는 경우 위험 함수(Subdistribution hazard function)</h1>
+<section id="competing-risk가-존재하는-경우-위험-함수subdistribution-hazard-function" class="level2">
+<h2 class="anchored" data-anchor-id="competing-risk가-존재하는-경우-위험-함수subdistribution-hazard-function">Competing risk가 존재하는 경우 위험 함수(Subdistribution hazard function)</h2>
 <p><span class="math display">\[
 \lambda_1^{FG}(t) = \lambda_1(t) + \lambda_2(t) \frac{\text{CIF}_1(t)}{S(t)}
 \]</span></p>
 <ul>
-<li><p><span class="math inline">\(\lambda_1\^{FG}(t)\)</span>: Subdistribution 위험 함수<br>
+<li><p><span class="math inline">\(\lambda_1^{FG}(t)\)</span>: Subdistribution 위험 함수<br>
 </p></li>
 <li><p><span class="math inline">\(\lambda_1(t)\)</span>: Event of Interest의 위험 함수<br>
 </p></li>
@@ -269,16 +268,16 @@ S(t) = \prod_{i: t_i \leq t} \left(1 - \frac{d_i}{n_i}\right)
 <li><p>즉 Fine-Gray Method에서의 위험 함수는 Event of Interest의 발생 위험과 더불어 Competing Risk의 위험과 CIF의 상호작용을 고려하여 정의가 된다.</p></li>
 </ul>
 </section>
-<section id="누적-발생률-함수cumulative-incidence-function-cif" class="level1">
-<h1>누적 발생률 함수(Cumulative Incidence Function, CIF)</h1>
-<section id="전통적인-방식원인별-위험-함수-기반-cif" class="level2">
-<h2 class="anchored" data-anchor-id="전통적인-방식원인별-위험-함수-기반-cif">전통적인 방식(원인별 위험 함수 기반 CIF)</h2>
+<section id="누적-발생률-함수cumulative-incidence-function-cif" class="level2">
+<h2 class="anchored" data-anchor-id="누적-발생률-함수cumulative-incidence-function-cif">누적 발생률 함수(Cumulative Incidence Function, CIF)</h2>
+<section id="전통적인-방식원인별-위험-함수-기반-cif" class="level3">
+<h3 class="anchored" data-anchor-id="전통적인-방식원인별-위험-함수-기반-cif">전통적인 방식(원인별 위험 함수 기반 CIF)</h3>
 <p><span class="math display">\[
 F_k(t) = \int_{0}^{t} \lambda_k(u) S(u) \, du
 \]</span></p>
 </section>
-<section id="fine-gray-방식" class="level2">
-<h2 class="anchored" data-anchor-id="fine-gray-방식">Fine-Gray 방식</h2>
+<section id="fine-gray-방식" class="level3">
+<h3 class="anchored" data-anchor-id="fine-gray-방식">Fine-Gray 방식</h3>
 <p><span class="math display">\[
 \text{CIF}_1(t) = \int_{0}^{t} \lambda_1^{FG}(s) S(s) \, ds
 \]</span></p>
@@ -287,6 +286,7 @@ F_k(t) = \int_{0}^{t} \lambda_k(u) S(u) \, du
 </ul>
 
 
+</section>
 </section>
 </section>
 
