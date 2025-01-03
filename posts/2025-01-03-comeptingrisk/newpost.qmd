@@ -1,0 +1,29 @@
+---
+title: "Competing Risk Analysis"
+description: |
+  Competing Risk Analysis와 Fine-Gray Method의 원리 및 사용
+  
+image: image.jpg
+categories:
+  - R
+  - statistics
+author:
+  - name: Hyungwoo Jo
+    url: https://github.com/sl-eeper
+fig_width: 400
+date: 2024-01-03
+format: html
+execute:
+  freeze: true
+draft: false
+---
+
+# Competing Risk Analysis 
+
+## Competing Risk Analysis가 필요한 이유 
+
+```{r}
+library(survival)
+1 + 1
+head(mtcars)
+```
