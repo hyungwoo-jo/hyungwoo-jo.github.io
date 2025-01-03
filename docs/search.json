@@ -4,48 +4,55 @@
     "href": "posts/2025-01-03-comeptingrisk/newpost.html",
     "title": "Competing Risk Analysis",
     "section": "",
-    "text": "경쟁 위험: 여러 종류의 이벤트가 동시에 발생할 수 있으며, 한 종류의 이벤트가 발생하면 다른 이벤트가 발생할 수 없는 상황\n경쟁 위험을 무시하면 모집단의 생존 함수나 이벤트 발생률을 과대 혹은 과소평가 할 위험이 있다\nEx) 암 재발이 event of interest 인 경우 사망이 competing risk로 작용할 수 있다(사망한 암 환자에게는 암 재발이라는 event가 발생 할 수 없기 때문)\n가장 대표적이고 자주 사용되는 방법이 Fine-Gray Method:\n경쟁 위험 상황에서 event of interest(ex. 암 재발)의 누적 발병률(Cumulative Incidence Function, CIF)를 직접 모델링 하는 통계 기법\n\n\n\n\\[\nS(t) = \\prod_{i: t_i \\leq t} \\left(1 - \\frac{d_i}{n_i}\\right)\n\\]\n\nS(t): 생존 함수\n\n\\(t_i\\): 사건 발생 시점\n\n\\(d_i\\): 시점 \\(t_i\\)에서 발생한 사건 수\n\n\\(n_i\\): 시점 \\(t_i\\)에서 위험에 노출된 대상 수\n\n생존 함수란 결국 각 사건 발생 시점에서의 생존 확률을 누적 곱하여 계산한 시간 \\(t\\)까지 생존할 확률\n\n\n\n\n\\[\n  \\lambda_k(t) = \\lim_{\\Delta t \\to 0} \\frac{P(t \\leq T &lt; t + \\Delta t, \\epsilon = k \\mid T \\geq t)}{\\Delta t}\n  \\]\n\n\\(\\lambda_k(t)\\): 이벤트 유형 \\(k\\)의 원인별 위험 함수\n\nT: 이벤트 발생 시간\n\n\\(\\epsilon\\): 이벤트 유형 지표(Ex. \\(\\epsilon\\) = 1: event of interest, \\(\\epsilon\\) = 2: competing risk )\n\n\n\n\n\\[\n\\lambda_1^{FG}(t) = \\lambda_1(t) + \\lambda_2(t) \\frac{\\text{CIF}_1(t)}{S(t)}\n\\]\n\n$_1^{FG}(t) $: Subdistribution 위험 함수\n\n\\(\\lambda_1(t)\\): Event of Interest의 위험 함수\n\n\\(\\lambda_2(t)\\): Competing risk의 위험 함수\n\n\\(\\text{CIF}_1(t)\\): 시간 \\(t\\)까지 Event of Interest가 발생할 누적 확률\n\n\\(S(t)\\): 시간 \\(t\\)까지의 생존 함수(모든 이벤트를 고려한 생존 확률)\n즉 Fine-Gray Method에서의 위험 함수는 Event of Interest의 발생 위험과 더불어 Competing Risk의 위험과 CIF의 상호작용을 고려하여 정의가 된다.\n\n\n\n\n\n\n\\[\nF_k(t) = \\int_{0}^{t} \\lambda_k(u) S(u) \\, du\n\\]\n\n\n\n\\[\n\\text{CIF}_1(t) = \\int_{0}^{t} \\lambda_1^{FG}(s) S(s) \\, ds\n\\] - CIF 란 시간 \\(t\\)까지 사건 유형 \\(k\\)가 발생할 누적 발생률을 시간별 생존 확률과 위험의 곱을 적분한 값으로 구하는 개념"
+    "text": "경쟁 위험: 여러 종류의 이벤트가 동시에 발생할 수 있으며, 한 종류의 이벤트가 발생하면 다른 이벤트가 발생할 수 없는 상황\n경쟁 위험을 무시하면 모집단의 생존 함수나 이벤트 발생률을 과대 혹은 과소평가 할 위험이 있다\nEx) 암 재발이 event of interest 인 경우 사망이 competing risk로 작용할 수 있다(사망한 암 환자에게는 암 재발이라는 event가 발생 할 수 없기 때문)\n가장 대표적이고 자주 사용되는 방법이 Fine-Gray Method:\n경쟁 위험 상황에서 event of interest(ex. 암 재발)의 누적 발병률(Cumulative Incidence Function, CIF)를 직접 모델링 하는 통계 기법"
   },
   {
-    "objectID": "posts/2025-01-03-comeptingrisk/newpost.html#competing-risk경쟁-위험",
-    "href": "posts/2025-01-03-comeptingrisk/newpost.html#competing-risk경쟁-위험",
+    "objectID": "posts/2025-01-03-comeptingrisk/newpost.html#전통적인-방식원인별-위험-함수-기반-cif",
+    "href": "posts/2025-01-03-comeptingrisk/newpost.html#전통적인-방식원인별-위험-함수-기반-cif",
     "title": "Competing Risk Analysis",
-    "section": "",
-    "text": "경쟁 위험: 여러 종류의 이벤트가 동시에 발생할 수 있으며, 한 종류의 이벤트가 발생하면 다른 이벤트가 발생할 수 없는 상황\n경쟁 위험을 무시하면 모집단의 생존 함수나 이벤트 발생률을 과대 혹은 과소평가 할 위험이 있다\nEx) 암 재발이 event of interest 인 경우 사망이 competing risk로 작용할 수 있다(사망한 암 환자에게는 암 재발이라는 event가 발생 할 수 없기 때문)\n가장 대표적이고 자주 사용되는 방법이 Fine-Gray Method:\n경쟁 위험 상황에서 event of interest(ex. 암 재발)의 누적 발병률(Cumulative Incidence Function, CIF)를 직접 모델링 하는 통계 기법\n\n\n\n\\[\nS(t) = \\prod_{i: t_i \\leq t} \\left(1 - \\frac{d_i}{n_i}\\right)\n\\]\n\nS(t): 생존 함수\n\n\\(t_i\\): 사건 발생 시점\n\n\\(d_i\\): 시점 \\(t_i\\)에서 발생한 사건 수\n\n\\(n_i\\): 시점 \\(t_i\\)에서 위험에 노출된 대상 수\n\n생존 함수란 결국 각 사건 발생 시점에서의 생존 확률을 누적 곱하여 계산한 시간 \\(t\\)까지 생존할 확률\n\n\n\n\n\\[\n  \\lambda_k(t) = \\lim_{\\Delta t \\to 0} \\frac{P(t \\leq T &lt; t + \\Delta t, \\epsilon = k \\mid T \\geq t)}{\\Delta t}\n  \\]\n\n\\(\\lambda_k(t)\\): 이벤트 유형 \\(k\\)의 원인별 위험 함수\n\nT: 이벤트 발생 시간\n\n\\(\\epsilon\\): 이벤트 유형 지표(Ex. \\(\\epsilon\\) = 1: event of interest, \\(\\epsilon\\) = 2: competing risk )\n\n\n\n\n\\[\n\\lambda_1^{FG}(t) = \\lambda_1(t) + \\lambda_2(t) \\frac{\\text{CIF}_1(t)}{S(t)}\n\\]\n\n$_1^{FG}(t) $: Subdistribution 위험 함수\n\n\\(\\lambda_1(t)\\): Event of Interest의 위험 함수\n\n\\(\\lambda_2(t)\\): Competing risk의 위험 함수\n\n\\(\\text{CIF}_1(t)\\): 시간 \\(t\\)까지 Event of Interest가 발생할 누적 확률\n\n\\(S(t)\\): 시간 \\(t\\)까지의 생존 함수(모든 이벤트를 고려한 생존 확률)\n즉 Fine-Gray Method에서의 위험 함수는 Event of Interest의 발생 위험과 더불어 Competing Risk의 위험과 CIF의 상호작용을 고려하여 정의가 된다.\n\n\n\n\n\n\n\\[\nF_k(t) = \\int_{0}^{t} \\lambda_k(u) S(u) \\, du\n\\]\n\n\n\n\\[\n\\text{CIF}_1(t) = \\int_{0}^{t} \\lambda_1^{FG}(s) S(s) \\, ds\n\\] - CIF 란 시간 \\(t\\)까지 사건 유형 \\(k\\)가 발생할 누적 발생률을 시간별 생존 확률과 위험의 곱을 적분한 값으로 구하는 개념"
+    "section": "전통적인 방식(원인별 위험 함수 기반 CIF)",
+    "text": "전통적인 방식(원인별 위험 함수 기반 CIF)\n\\[\nF_k(t) = \\int_{0}^{t} \\lambda_k(u) S(u) \\, du\n\\]"
+  },
+  {
+    "objectID": "posts/2025-01-03-comeptingrisk/newpost.html#fine-gray-방식",
+    "href": "posts/2025-01-03-comeptingrisk/newpost.html#fine-gray-방식",
+    "title": "Competing Risk Analysis",
+    "section": "Fine-Gray 방식",
+    "text": "Fine-Gray 방식\n\\[\n\\text{CIF}_1(t) = \\int_{0}^{t} \\lambda_1^{FG}(s) S(s) \\, ds\n\\]\n\nCIF 란 시간 \\(t\\)까지 사건 유형 \\(k\\)가 발생할 누적 발생률을 시간별 생존 확률과 위험의 곱을 적분한 값으로 구하는 개념"
   },
   {
     "objectID": "posts/post-with-code/index.html",
     "href": "posts/post-with-code/index.html",
     "title": "Post With Code",
     "section": "",
-    "text": "This is a post with executable code.\n\n1 + 1\n\n[1] 2"
+    "text": "This is a post with executable code.\n\n1 + 1\n\n[1] 2\n\n\n\n\n\nCitationBibTeX citation:@online{malloc2024,\n  author = {Malloc, Harlow},\n  title = {Post {With} {Code}},\n  date = {2024-12-23},\n  langid = {en}\n}\nFor attribution, please cite this work as:\nMalloc, Harlow. 2024. “Post With Code.” December 23, 2024."
   },
   {
     "objectID": "index.html",
     "href": "index.html",
     "title": "blog",
     "section": "",
-    "text": "Order By\n       Default\n         \n          Title\n        \n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n         \n          Author\n        \n     \n  \n\n\n\n\n\n\n\n\n\n\nCompeting Risk Analysis\n\n\n\n\n\n\nR\n\n\ncompeting risk analysis\n\n\nfinegray\n\n\n\nCompeting Risk Analysis와 Fine-Gray Method 공부 내용 정리 \n\n\n\n\n\nJan 3, 2025\n\n\nHyungwoo Jo\n\n\n\n\n\n\n\n\n\n\n\n\nPost With Code\n\n\n\n\n\n\nR\n\n\nPython\n\n\n\n\n\n\n\n\n\nDec 23, 2024\n\n\nKim kim\n\n\n\n\n\n\n\n\n\n\n\n\nPost With Code\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nDec 23, 2024\n\n\nHarlow Malloc\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nDec 20, 2024\n\n\nTristan O’Malley\n\n\n\n\n\n\nNo matching items"
+    "text": "Order By\n       Default\n         \n          Title\n        \n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n         \n          Author\n        \n     \n  \n\n\n\n\n\n\n\n\n\n\nCompeting Risk Analysis\n\n\n\n\n\n\nR\n\n\ncompeting risk analysis\n\n\nfinegray\n\n\n\nCompeting Risk Analysis와 Fine-Gray Method 공부 내용 정리 \n\n\n\n\n\nJan 3, 2025\n\n\nHyungwoo Jo\n\n\n\n\n\n\n\n\n\n\n\n\nPost With Code\n\n\n\n\n\n\nR\n\n\nPython\n\n\n\n\n\n\n\n\n\nDec 23, 2024\n\n\nKim kim\n\n\n\n\n\n\n\n\n\n\n\n\nPost With Code\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nDec 23, 2024\n\n\nHarlow Malloc\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nDec 20, 2024\n\n\nTristan O’Malley\n\n\n\n\n\n\nNo matching items\n\nCitationBibTeX citation:@online{untitled,\n  author = {},\n  title = {Blog},\n  langid = {en}\n}\nFor attribution, please cite this work as:\n“Blog.” n.d."
   },
   {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "About this blog"
+    "text": "About this blog\n\n\nCitationBibTeX citation:@online{untitled,\n  author = {},\n  title = {About},\n  langid = {en}\n}\nFor attribution, please cite this work as:\n“About.” n.d."
   },
   {
     "objectID": "posts/newpost/newpost.html",
     "href": "posts/newpost/newpost.html",
     "title": "Post With Code",
     "section": "",
-    "text": "This is a post with executable code.\n\nlibrary(survival)\n1 + 1\n\n[1] 2\n\nhead(mtcars)\n\n                   mpg cyl disp  hp drat    wt  qsec vs am gear carb\nMazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4\nMazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4\nDatsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1\nHornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1\nHornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2\nValiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1"
+    "text": "This is a post with executable code.\n\nlibrary(survival)\n1 + 1\n\n[1] 2\n\nhead(mtcars)\n\n                   mpg cyl disp  hp drat    wt  qsec vs am gear carb\nMazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4\nMazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4\nDatsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1\nHornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1\nHornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2\nValiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1\n\n\n\n\n\nCitationBibTeX citation:@online{kim2024,\n  author = {kim, Kim},\n  title = {Post {With} {Code}},\n  date = {2024-12-23},\n  langid = {en}\n}\nFor attribution, please cite this work as:\nkim, Kim. 2024. “Post With Code.” December 23, 2024."
   },
   {
     "objectID": "posts/welcome/index.html",
     "href": "posts/welcome/index.html",
     "title": "Welcome To My Blog",
     "section": "",
-    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts.\n\n\n\nCitationBibTeX citation:@online{o'malley2024,\n  author = {O’Malley, Tristan},\n  title = {Welcome {To} {My} {Blog}},\n  date = {2024-12-20},\n  langid = {en}\n}\nFor attribution, please cite this work as:\nO’Malley, Tristan. 2024. “Welcome To My Blog.” December 20,\n2024."
   }
 ]
