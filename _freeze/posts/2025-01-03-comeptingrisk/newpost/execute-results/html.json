@@ -1,0 +1,15 @@
+{
+  "hash": "02de730fb462f1a8697fc2775efce968",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Competing Risk Analysis\"\ndescription: |\n  Competing Risk Analysis와 Fine-Gray Method의 원리 및 사용\n  \nimage: image.jpg\ncategories: [R]\nauthor:\n  - name: Hyungwoo Jo\n    url: https://github.com/sl-eeper\nfig_width: 400\ndate: 2024-01-03\nformat: html\nexecute:\n  freeze: true\ndraft: false\n---\n\n\n\n# Competing Risk Analysis\n\n## Competing Risk Analysis가 필요한 이유\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(survival)\n1 + 1\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] 2\n```\n\n\n:::\n\n```{.r .cell-code}\nhead(mtcars)\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n                   mpg cyl disp  hp drat    wt  qsec vs am gear carb\nMazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4\nMazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4\nDatsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1\nHornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1\nHornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2\nValiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1\n```\n\n\n:::\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

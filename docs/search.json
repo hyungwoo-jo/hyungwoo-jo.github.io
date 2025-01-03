@@ -25,7 +25,7 @@
     "href": "index.html",
     "title": "blog",
     "section": "",
-    "text": "Post With Code\n\n\n\n\n\n\nR\n\n\nPython\n\n\n\n\n\n\n\n\n\nDec 23, 2024\n\n\nKim kim\n\n\n\n\n\n\n\n\n\n\n\n\nPost With Code\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nDec 23, 2024\n\n\nHarlow Malloc\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nDec 20, 2024\n\n\nTristan O’Malley\n\n\n\n\n\n\n\n\n\n\n\n\ncompeting risk 생존분석, fine-and-gray method와 multi-state model\n\n\n\n\n\n\nR\n\n\nstatistics\n\n\n\ncompeting risk가 존재할 때 생존 분석할 수 있는 fine-and-gray method와 multi-state model을 소개합니다 \n\n\n\n\n\nAug 22, 2024\n\n\nHyojong Myung\n\n\n\n\n\n\nNo matching items"
+    "text": "Post With Code\n\n\n\n\n\n\nR\n\n\nPython\n\n\n\n\n\n\n\n\n\nDec 23, 2024\n\n\nKim kim\n\n\n\n\n\n\n\n\n\n\n\n\nPost With Code\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nDec 23, 2024\n\n\nHarlow Malloc\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nDec 20, 2024\n\n\nTristan O’Malley\n\n\n\n\n\n\n\n\n\n\n\n\nCompeting Risk Analysis\n\n\n\n\n\n\nR\n\n\n\nCompeting Risk Analysis와 Fine-Gray Method의 원리 및 사용 \n\n\n\n\n\nJan 3, 2024\n\n\nHyungwoo Jo\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/post-with-code/index.html",
@@ -40,5 +40,19 @@
     "title": "competing risk 생존분석, fine-and-gray method와 multi-state model",
     "section": "",
     "text": "This is a post with executable code.\n\nlibrary(survival)\n1 + 1\n\n[1] 2\n\nhead(mtcars)\n\n                   mpg cyl disp  hp drat    wt  qsec vs am gear carb\nMazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4\nMazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4\nDatsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1\nHornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1\nHornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2\nValiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1\n\n\n\n\n\nReuseCC BY-NC 4.0"
+  },
+  {
+    "objectID": "posts/2025-01-03-comeptingrisk/newpost.html",
+    "href": "posts/2025-01-03-comeptingrisk/newpost.html",
+    "title": "Competing Risk Analysis",
+    "section": "",
+    "text": "library(survival)\n1 + 1\n\n[1] 2\n\nhead(mtcars)\n\n                   mpg cyl disp  hp drat    wt  qsec vs am gear carb\nMazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4\nMazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4\nDatsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1\nHornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1\nHornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2\nValiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1"
+  },
+  {
+    "objectID": "posts/2025-01-03-comeptingrisk/newpost.html#competing-risk-analysis가-필요한-이유",
+    "href": "posts/2025-01-03-comeptingrisk/newpost.html#competing-risk-analysis가-필요한-이유",
+    "title": "Competing Risk Analysis",
+    "section": "",
+    "text": "library(survival)\n1 + 1\n\n[1] 2\n\nhead(mtcars)\n\n                   mpg cyl disp  hp drat    wt  qsec vs am gear carb\nMazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4\nMazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4\nDatsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1\nHornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1\nHornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2\nValiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1"
   }
 ]
