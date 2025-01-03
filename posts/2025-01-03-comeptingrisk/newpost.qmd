@@ -4,9 +4,7 @@ description: |
   Competing Risk Analysis와 Fine-Gray Method의 원리 및 사용
   
 image: image.jpg
-categories:
-  - R
-  - statistics
+categories: [R]
 author:
   - name: Hyungwoo Jo
     url: https://github.com/sl-eeper
@@ -18,9 +16,9 @@ execute:
 draft: false
 ---
 
-# Competing Risk Analysis 
+# Competing Risk Analysis
 
-## Competing Risk Analysis가 필요한 이유 
+## Competing Risk Analysis가 필요한 이유
 
 ```{r}
 library(survival)
