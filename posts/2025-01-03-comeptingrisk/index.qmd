@@ -1,9 +1,7 @@
 ---
 title: "Competing Risk Analysis"
-description: |
-  Competing Risk Analysis와 Fine-Gray Method 공부 내용 정리
-  
-image: image.jpg
+description: "Fine-Gray Method 공부 내용 정리"
+image: img/image.png
 categories: [statistics]
 author:
   - name: Hyungwoo Jo
@@ -14,15 +12,14 @@ format: html
 execute:
   freeze: true
 draft: false
+citation: true
 ---
 
-# Competing Risk(경쟁 위험)
+# Competing Risk Analysis
 
--   경쟁 위험: 여러 종류의 이벤트가 동시에 발생할 수 있으며, 한 종류의 이벤트가 발생하면 다른 이벤트가 발생할 수 없는 상황
--   경쟁 위험을 무시하면 **모집단의 생존 함수**나 **이벤트 발생률**을 **과대 혹은 과소평가** 할 위험이 있다
--   Ex) 암 재발이 event of interest 인 경우 사망이 competing risk로 작용할 수 있다(사망한 암 환자에게는 암 재발이라는 event가 발생 할 수 없기 때문)
--   가장 대표적이고 자주 사용되는 방법이 Fine-Gray Method:
--   경쟁 위험 상황에서 event of interest(ex. 암 재발)의 누적 발병률(Cumulative Incidence Function, CIF)를 직접 모델링 하는 통계 기법
+ 최근 의학 연구에서 competing risk analysis를 요구하는 경우가 많은데, 이에 대해 공부해보고자 한다. 
+
+ 경쟁 위험(Competing risk)은 한 종류의 이벤트가 발생하면 다른 이벤트가 발생할 수 없는 상황으로 정의된다.  예를 들어, 암 재발이 event of interest 인 경우 사망이 competing risk로 작용할 수 있다 (사망한 암 환자에게는 암 재발이라는 event가 발생 할 수 없기 때문). 경쟁 위험을 무시하면 **모집단의 생존 함수**나 **이벤트 발생률**을 **과대 혹은 과소평가** 할 위험이 생기기에 이를 고려한 분석이 필요한 경우들이 있다. 경쟁 위험을 고려한 분석 방법으로 가장 대표적이고 자주 사용되는 방법이 Fine-Gray Method인데, 이를 위해 생존 분석의 기본 개념을 간단하게 살펴보고 Fine-Gray Method는 전통적 방식과 어떻게 다른지 알아보고자 한다.
 
 ## 생존 함수
 
@@ -68,7 +65,8 @@ $$
 
 -   $S(t)$: 시간 $t$까지의 생존 함수(모든 이벤트를 고려한 생존 확률)
 
--   즉 Fine-Gray Method에서의 위험 함수는 Event of Interest의 발생 위험과 더불어 Competing Risk의 위험과 CIF의 상호작용을 고려하여 정의가 된다.
+즉 Fine-Gray Method에서의 위험 함수는 Event of Interest의 발생 위험과 더불어 Competing Risk의 위험과 CIF의 상호작용을 고려하여 정의가 된다. 수식의 첫 번째 항의 경우 Event of Interest의 기본적인 위험이며, 두 번째 항은  $\lambda_2(t)$와 $\frac{\text{CIF}_1(t)}{S(t)}$의 곱으로 이루어 져있다는 것을 알 수 있다. 두 번째 항의 경우 조금 더 자세히 살펴보면 Competing Risk 의 발생률인 $\lambda_2(t)$를 Event of Interest의 누적 확률을 생존 함수로 나눈 값인 $\frac{\text{CIF}_1(t)}{S(t)}$로 조정한다는 의미로 볼 수 있는데, 이는 Event of Interest가 누적적으로 발생할 수록 Competing Risk가 발생할 가능성에 영향을 줄 수 있다는 의미로 볼 수 있다. 
+
 
 ## 누적 발생률 함수(Cumulative Incidence Function, CIF)
 

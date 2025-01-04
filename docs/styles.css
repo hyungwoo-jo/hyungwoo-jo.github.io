@@ -1,1 +1,65 @@
-/* css styles */
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600&family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+/* Article preview image */
+.thumnail-image {
+  width: 240px !important; /* Set a fixed width for consistent layout */
+  margin: auto; /* Center the image */
+  border-radius: 8px; /* Create rounded corners for the image */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Apply a shadow around the image */
+}
+
+/* GitHub icon color */
+.github {
+  color: #FFFFFF; /* Set the color of the GitHub icon to white */
+}
+
+/* Main content and text styling */
+main, p {
+  font-size: 0.9rem !important; /* Define the font size for main content and paragraphs */
+  line-height: 1.6; /* Define the spacing between lines */
+  font-family: 'Inter', 'Noto Sans KR', sans-serif !important; /* Use Inter for English, Noto Sans KR for Korean */
+  color: #202124; /* Set a dark gray color for the text */
+}
+
+/* Apply consistent font styling to all text elements */
+body, h1, h2, h3, h4, h5, h6, main, p, ul, ol, li, blockquote, input, button, select, textarea {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif !important; /* Use Inter for English, Noto Sans KR for Korean */
+  font-size: 0.9rem; /* Consistent font size */
+  line-height: 1.6; /* Consistent line spacing */
+  color: #202124; /* Consistent text color */
+}
+
+/* Additional styling for headings to differentiate sizes */
+h1 {
+  font-size: 2rem; /* Larger font size for main titles */
+  font-weight: 1000; /* Bold font for main titles */
+}
+
+h2 {
+  font-size: 1.75rem; /* Slightly smaller than h1 */
+  font-weight: 800;
+}
+
+h3 {
+  font-size: 1.5rem; /* Medium size for headings */
+  font-weight: 700;
+}
+
+h4, h5, h6 {
+  font-size: 1.25rem; /* Smaller sizes for subheadings */
+  font-weight: 400;
+}
+
+/* Form elements font consistency */
+input, button, select, textarea {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif !important; /* Ensure consistency for interactive elements */
+  font-size: 0.9rem; /* Match text font size */
+  color: #202124; /* Match text color */
+}
+
+/* Order By input group alignment */
+.input-group.input-group-sm.quarto-listing-sort {
+  display: flex; /* Use flexbox for alignment */
+  align-items: center; /* Align items vertically in the center */
+}
