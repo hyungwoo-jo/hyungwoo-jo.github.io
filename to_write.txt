@@ -1,0 +1,3 @@
+COX and pooled logistics
+
+log-rank test와 비례위험 가정
