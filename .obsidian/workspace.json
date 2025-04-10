@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "posts/2025-01-03-comeptingrisk/index.qmd",
+                "file": "index.qmd",
                 "mode": "source",
                 "source": false
               },
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "posts/2025-01-03-comeptingrisk/index.qmd",
+                "file": "index.qmd",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -113,7 +113,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "posts/2025-01-03-comeptingrisk/index.qmd",
+                "file": "index.qmd",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -142,7 +142,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "posts/2025-01-03-comeptingrisk/index.qmd",
+                "file": "index.qmd",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -159,6 +159,26 @@
               "state": {},
               "icon": "git-pull-request",
               "title": "Source Control"
+            }
+          },
+          {
+            "id": "dc2fd5cfe2435a63",
+            "type": "leaf",
+            "state": {
+              "type": "SC-custom-variables-view",
+              "state": {},
+              "icon": "code-glyph",
+              "title": "Shell commands: Custom variables"
+            }
+          },
+          {
+            "id": "8748d92686cbba22",
+            "type": "leaf",
+            "state": {
+              "type": "SC-custom-variables-view",
+              "state": {},
+              "icon": "code-glyph",
+              "title": "Shell commands: Custom variables"
             }
           }
         ],
@@ -177,9 +197,23 @@
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
       "obsidian-git:Open Git source control": false,
-      "qmd-as-md-obsidian:Toggle Quarto Preview": false
+      "qmd-as-md-obsidian:Toggle Quarto Preview": false,
+      "obsidian-shellcommands:Shell commands: Custom variables": false
     }
   },
-  "active": "ff61479e9c675e3e",
-  "lastOpenFiles": []
+  "active": "8748d92686cbba22",
+  "lastOpenFiles": [
+    "docs/site_libs/quarto-html/tabsets/tabsets.js",
+    "docs/site_libs/quarto-html/tabsets",
+    "docs/site_libs/quarto-html/quarto-syntax-highlighting-68bca3a50acd80feb0cb8c3c361c6f22.css",
+    "_freeze/site_libs/bootstrap",
+    "docs/index-listing.json",
+    "site_libs/quarto-html/tabsets/tabsets.js",
+    "site_libs/quarto-search/quarto-search.js",
+    "site_libs/quarto-search/fuse.min.js",
+    "site_libs/quarto-search/autocomplete.umd.js",
+    "site_libs/quarto-html/zenscroll-min.js",
+    "site_libs/quarto-html/tippy.umd.min.js",
+    "profile.jpg"
+  ]
 }
