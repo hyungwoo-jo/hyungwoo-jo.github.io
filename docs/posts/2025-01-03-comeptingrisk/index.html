@@ -319,22 +319,22 @@ h_k^{sd}(t) = \lim_{\Delta t \to 0} \frac{P(t \leq T &lt; t+\Delta t, \text{Caus
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">sample_data</span>, n<span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   ID Time Event    Sex Depression CVD_time
-1   1 1.66     1 Female         No     1.66
-2   2 3.11     1   Male         No     3.11
-3   3 0.04     1   Male         No     0.04
-4   4 1.81     1   Male         No     1.81
-5   5 7.56     1   Male         No     7.56
-6   6 8.96     1   Male         No     8.96
-7   7 3.28     1 Female         No     3.28
-8   8 3.91     1   Male         No     3.91
-9   9 2.87     1   Male         No     2.87
-10 10 1.64     1 Female         No     1.64
-11 11 4.38     1 Female         No     4.38
-12 12 1.16     2 Female         No     1.71
-13 13 7.86     1 Female         No     7.86
-14 14 1.72     1   Male         No     1.72
-15 15 0.50     1 Female         No     0.50</code></pre>
+<pre><code>   ID  Time Event    Sex Depression CVD_time
+1   1  2.09     1 Female         No     2.09
+2   2  0.81     2 Female         No    16.60
+3   3  3.63     1   Male         No     3.63
+4   4  5.22     2 Female         No     5.75
+5   5  1.44     1   Male         No     1.44
+6   6  2.29     1   Male         No     2.29
+7   7  3.27     1   Male         No     3.27
+8   8 12.66     1 Female         No    12.66
+9   9  1.58     2 Female         No    10.36
+10 10  8.78     1   Male         No     8.78
+11 11  1.32     1   Male         No     1.32
+12 12  0.04     1 Female         No     0.04
+13 13  1.95     1 Female         No     1.95
+14 14  6.47     1   Male         No     6.47
+15 15  5.31     2   Male         No     6.82</code></pre>
 </div>
 </div>
 <p>데이터에서 Time은 Death(CVD, non-CVD 포함)가 발생한 시점입니다. R의 cmprsk 패키지를 통해 fine gray method로 분석을 진행하고, 전통적 생존 분석또한 함께 진행해보겠습니다.</p>
@@ -350,15 +350,15 @@ h_k^{sd}(t) = \lim_{\Delta t \to 0} \frac{P(t \leq T &lt; t+\Delta t, \text{Caus
 <span><span class="fu"><a href="https://rdrr.io/pkg/jstable/man/cox2.display.html">cox2.display</a></span><span class="op">(</span><span class="va">cox_csh</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$table
-               HR(95%CI)          P value
-Depression_num "0.94 (0.15,6.12)" "0.954"
+               HR(95%CI)         P value
+Depression_num "3.8 (2.66,5.43)" "0.182"
 
 $metric
                         [,1] [,2]
 &lt;NA&gt;                      NA   NA
 No. of observations 10000.00   NA
-No. of events        4677.00   NA
-AIC                 75452.43   NA
+No. of events        4789.00   NA
+AIC                 77447.87   NA
 
 $caption
 [1] "Cox model on time ('NA, surv_object_csh, character(0)') to event ('surv_object_csh')"</code></pre>
@@ -378,15 +378,15 @@ $caption
 Call:
 crr(ftime = ftime, fstatus = fstatus, cov1 = covariates)
 
-                coef exp(coef) se(coef)     z p-value
-Depression_num -1.04     0.352   0.0335 -31.2       0
+                 coef exp(coef) se(coef)   z p-value
+Depression_num -0.984     0.374   0.0328 -30       0
 
                exp(coef) exp(-coef) 2.5% 97.5%
-Depression_num     0.352       2.84 0.33 0.376
+Depression_num     0.374       2.68 0.35 0.399
 
 Num. cases = 10000
-Pseudo Log-likelihood = -41175 
-Pseudo likelihood ratio test = 1168  on 1 df,</code></pre>
+Pseudo Log-likelihood = -42183 
+Pseudo likelihood ratio test = 1072  on 1 df,</code></pre>
 </div>
 </div>
 <p>exp(coef) 즉 subdistribution hazard ratio가 0.363이고, p value 가 &lt;0.01임으로 우울증이 있는 사람에게는 CVD-death가 덜 발생한다고 해석할 수 있습니다. 우울증 여부가 CVD-death에 영향을 미치지 않게 데이터를 만들었는데 왜 이런 결과가 나왔는지 그리고 서로 다르게 나온 두 결과를 각각 어떻게 해석해야 되는지를 알아보겠습니다. 우울증 환자와 비 우울증 환자에서 CVD-death에 대한 CIF를 한번 그려보도록 하겠습니다.</p>
@@ -488,7 +488,7 @@ Pseudo likelihood ratio test = 1168  on 1 df,</code></pre>
 6        0 0.9873022</code></pre>
 </div>
 </div>
-<p>데이터에서 볼 수 있듯이 competing risk가 발생한 환자의 경우 추적 종료까지 risk set에 기여도는 낮아지지만, 끝까지 포함되어 있다는 것을 알 수 있습니다. 또한 얻은 pdata로 기존의 생존분석과 같은 함수를 사용하면, 가중치가 반영되어 fine gray method로 구한 subdistribution hazard function에 대한 coefficient값을 얻을 수 있다는 것을 알 수 있습니다. .</p>
+<p>데이터에서 볼 수 있듯이 competing risk가 발생한 환자의 경우 추적 종료까지 risk set에 기여도는 낮아지지만, 끝까지 포함되어 있다는 것을 알 수 있습니다. 또한 얻은 pdata로 기존의 생존분석과 같은 함수를 사용하면, 가중치가 반영되어 fine gray method로 구한 subdistribution hazard function에 대한 coefficient값을 얻을 수 있다는 것을 알 수 있습니다. ..test</p>
 <div class="cell">
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fgfit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/coxph.html">coxph</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span><span class="op">(</span><span class="va">fgstart</span>, <span class="va">fgstop</span>, <span class="va">fgstatus</span><span class="op">)</span> <span class="op">~</span> <span class="va">age</span><span class="op">+</span><span class="va">sex</span>,</span>
 <span>               weight<span class="op">=</span><span class="va">fgwt</span>, data<span class="op">=</span><span class="va">pdata</span>, model <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
