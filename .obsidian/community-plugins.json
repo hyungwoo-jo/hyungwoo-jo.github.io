@@ -1,5 +1,6 @@
 [
   "obsidian-git",
   "qmd-as-md-obsidian",
-  "obsidian-shellcommands"
+  "obsidian-shellcommands",
+  "obsidian-html-plugin"
 ]

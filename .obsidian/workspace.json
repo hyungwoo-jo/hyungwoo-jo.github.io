@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "index.qmd",
+                "file": "posts/2025-01-03-comeptingrisk/index.qmd",
                 "mode": "source",
                 "source": false
               },
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "index.qmd",
+                "file": "posts/2025-01-03-comeptingrisk/index.qmd",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -113,7 +113,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "index.qmd",
+                "file": "posts/2025-01-03-comeptingrisk/index.qmd",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -142,7 +142,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "index.qmd",
+                "file": "posts/2025-01-03-comeptingrisk/index.qmd",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -201,19 +201,28 @@
       "obsidian-shellcommands:Shell commands: Custom variables": false
     }
   },
-  "active": "8748d92686cbba22",
+  "active": "e61219fd40ffb34b",
   "lastOpenFiles": [
-    "docs/site_libs/quarto-html/tabsets/tabsets.js",
-    "docs/site_libs/quarto-html/tabsets",
-    "docs/site_libs/quarto-html/quarto-syntax-highlighting-68bca3a50acd80feb0cb8c3c361c6f22.css",
-    "_freeze/site_libs/bootstrap",
     "docs/index-listing.json",
-    "site_libs/quarto-html/tabsets/tabsets.js",
-    "site_libs/quarto-search/quarto-search.js",
-    "site_libs/quarto-search/fuse.min.js",
-    "site_libs/quarto-search/autocomplete.umd.js",
-    "site_libs/quarto-html/zenscroll-min.js",
-    "site_libs/quarto-html/tippy.umd.min.js",
-    "profile.jpg"
+    "site_libs/bootstrap/bootstrap.min.js",
+    "site_libs/bootstrap/bootstrap-icons.css",
+    "site_libs/bootstrap/bootstrap-icons.woff",
+    "site_libs/bootstrap/bootstrap-cad4976e289952ad4ef93c947d06bba2.min.css",
+    "site_libs/bootstrap",
+    "site_libs/quarto-listing/quarto-listing.js",
+    "site_libs/quarto-listing/list.min.js",
+    "site_libs/quarto-listing",
+    "index.html",
+    "index_files/mediabag",
+    "posts/2025-01-03-comeptingrisk/index_files/figure-html/unnamed-chunk-6-1.png",
+    "posts/2025-01-03-comeptingrisk/index_files/figure-html/unnamed-chunk-5-1.png",
+    "posts/2025-01-03-comeptingrisk/index_files/figure-html/unnamed-chunk-4-1.png",
+    "posts/2025-01-03-comeptingrisk/img/image.png",
+    "_site/posts/post-with-code/image.jpg",
+    "_site/posts/welcome/thumbnail.jpg",
+    "docs/profile.jpg",
+    "docs/posts/2025-01-03-comeptingrisk/img/image.png",
+    "docs/posts/2025-01-03-comeptingrisk/index_files/figure-html/unnamed-chunk-6-1.png",
+    "docs/posts/2025-01-03-comeptingrisk/index_files/figure-html/unnamed-chunk-5-1.png"
   ]
 }
