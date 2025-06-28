@@ -148,7 +148,7 @@ sample_data <- sample_data %>%
   mutate(
     Sex_num = ifelse(Sex == "Male", 1, 0),
     Depression_num = ifelse(Depression == "Yes", 1, 0)
-  )
+  ) 
 surv_object_csh <- Surv(time = sample_data$Time, event = sample_data$Event == 1)
 cox_csh <- coxph(surv_object_csh ~ Depression_num, data = sample_data)
 cox2.display(cox_csh)

@@ -193,7 +193,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Author</div>
       <div class="quarto-title-meta-contents">
-               <p><a href="https://github.com/sl-eeper">Hyungwoo Jo</a> </p>
+               <p><a href="https://github.com/hyungwoo-jo">Hyungwoo Jo</a> </p>
             </div>
     </div>
       
@@ -363,21 +363,21 @@ h_k^{sd}(t) = \lim_{\Delta t \to 0} \frac{P(t \leq T &lt; t+\Delta t, \text{Caus
 <span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sample_data, <span class="at">n=</span> <span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   ID Time Event    Sex Depression CVD_time
-1   1 6.16     1   Male         No     6.16
-2   2 6.04     1   Male         No     6.04
-3   3 2.19     2   Male         No     5.60
-4   4 6.98     1 Female         No     6.98
-5   5 1.86     1 Female         No     1.86
-6   6 1.43     1 Female         No     1.43
-7   7 5.14     2   Male         No     6.77
-8   8 3.53     2   Male         No     6.13
-9   9 1.03     1   Male         No     1.03
-10 10 3.02     2 Female         No     3.82
-11 11 3.58     2 Female         No    15.10
-12 12 6.84     2 Female         No    14.91
-13 13 2.87     1 Female         No     2.87
-14 14 3.62     1 Female         No     3.62
-15 15 0.19     1   Male         No     0.19</code></pre>
+1   1 4.96     1 Female         No     4.96
+2   2 0.92     1 Female         No     0.92
+3   3 1.48     1   Male         No     1.48
+4   4 0.09     1   Male         No     0.09
+5   5 0.66     2 Female         No    14.27
+6   6 0.03     1   Male         No     0.03
+7   7 1.00     1   Male         No     1.00
+8   8 0.47     1   Male         No     0.47
+9   9 1.70     1   Male         No     1.70
+10 10 2.36     1 Female         No     2.36
+11 11 8.27     2   Male         No    17.14
+12 12 1.45     1 Female         No     1.45
+13 13 9.71     1 Female         No     9.71
+14 14 0.81     1 Female         No     0.81
+15 15 8.30     1 Female         No     8.30</code></pre>
 </div>
 </div>
 <p>데이터에서 Time은 Death(CVD, non-CVD 포함)가 발생한 시점입니다. R의 cmprsk 패키지를 통해 fine gray method로 분석을 진행하고, 전통적 생존 분석또한 함께 진행해보겠습니다.</p>
@@ -387,24 +387,24 @@ h_k^{sd}(t) = \lim_{\Delta t \to 0} \frac{P(t \leq T &lt; t+\Delta t, \text{Caus
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sex_num =</span> <span class="fu">ifelse</span>(Sex <span class="sc">==</span> <span class="st">"Male"</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Depression_num =</span> <span class="fu">ifelse</span>(Depression <span class="sc">==</span> <span class="st">"Yes"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  ) </span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>surv_object_csh <span class="ot">&lt;-</span> <span class="fu">Surv</span>(<span class="at">time =</span> sample_data<span class="sc">$</span>Time, <span class="at">event =</span> sample_data<span class="sc">$</span>Event <span class="sc">==</span> <span class="dv">1</span>)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>cox_csh <span class="ot">&lt;-</span> <span class="fu">coxph</span>(surv_object_csh <span class="sc">~</span> Depression_num, <span class="at">data =</span> sample_data)</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cox2.display</span>(cox_csh)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$table
                HR(95%CI)          P value
-Depression_num "0.24 (0.18,0.32)" "0.152"
+Depression_num "1.02 (0.95,1.09)" "0.562"
 
 $metric
-                       [,1] [,2]
-&lt;NA&gt;                     NA   NA
-No. of observations 10000.0   NA
-No. of events        4772.0   NA
-AIC                 77007.7   NA
+                        [,1] [,2]
+&lt;NA&gt;                      NA   NA
+No. of observations 10000.00   NA
+No. of events        4784.00   NA
+AIC                 77070.23   NA
 
 $caption
-[1] "Cox model on time ('NA, surv_object_csh, character(0)') to event ('surv_object_csh')"</code></pre>
+[1] "Cox model on time ('NA') to event ('NA')"</code></pre>
 </div>
 </div>
 <p>exp(coef= beta)즉 Hazard ratio가 1이고 p-value가 0.936으로, 우울증 여부가 CVD-death에 영향을 미치지 않는 다는 것을 알 수 있습니다. 이는 데이터를 만들때의 가정과 동일하기 때문에 전통적 생존분석은 이를 잘 반영한다는 것을 알 수 있습니다. 이번엔 competing risk를 고려한 fine gray method로 분석을 해보겠습니다.</p>
@@ -421,15 +421,15 @@ $caption
 Call:
 crr(ftime = ftime, fstatus = fstatus, cov1 = covariates)
 
-                coef exp(coef) se(coef)   z p-value
-Depression_num -1.06     0.345   0.0333 -32       0
+                coef exp(coef) se(coef)     z p-value
+Depression_num -1.03     0.357   0.0331 -31.1       0
 
                exp(coef) exp(-coef)  2.5% 97.5%
-Depression_num     0.345        2.9 0.323 0.368
+Depression_num     0.357        2.8 0.335 0.381
 
 Num. cases = 10000
-Pseudo Log-likelihood = -41956 
-Pseudo likelihood ratio test = 1236  on 1 df,</code></pre>
+Pseudo Log-likelihood = -42093 
+Pseudo likelihood ratio test = 1166  on 1 df,</code></pre>
 </div>
 </div>
 <p>exp(coef) 즉 subdistribution hazard ratio가 0.363이고, p value 가 &lt;0.01임으로 우울증이 있는 사람에게는 CVD-death가 덜 발생한다고 해석할 수 있습니다. 우울증 여부가 CVD-death에 영향을 미치지 않게 데이터를 만들었는데 왜 이런 결과가 나왔는지 그리고 서로 다르게 나온 두 결과를 각각 어떻게 해석해야 되는지를 알아보겠습니다. 우울증 환자와 비 우울증 환자에서 CVD-death에 대한 CIF를 한번 그려보도록 하겠습니다.</p>
