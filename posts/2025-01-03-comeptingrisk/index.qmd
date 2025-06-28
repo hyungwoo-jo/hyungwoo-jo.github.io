@@ -5,7 +5,7 @@ image: img/image.png
 categories: [statistics]
 author:
   - name: Hyungwoo Jo
-    url: https://github.com/sl-eeper
+    url: https://github.com/hyungwoo-jo
 fig_width: 400
 date: 2025-01-03
 format: html
