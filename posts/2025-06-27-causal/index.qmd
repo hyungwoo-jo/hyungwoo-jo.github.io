@@ -308,26 +308,52 @@ library(jstable)
 set.seed(2025)
 n <- 10000
 
-true_death_time <- rexp(n, rate = 0.3)
-time_to_tx <- runif(n, 0, 5)
-time_to_tx[sample(n, n/2)] <- NA 
-df <- tibble(
+# 1. RCT처럼 치료군과 대조군을 1:1로 무작위 배정한다.
+group <- rbinom(n, 1, 0.5)
+
+# 2. '초기 위험'이 높은 Weibull 분포로 생존 시간을 생성한다.
+# shape < 1 (e.g., 0.7)은 초기에 사망 위험(hazard)이 가장 높고,
+# 시간이 지남에 따라 위험이 감소하는 것을 의미한다.
+# 두 그룹의 근본적인 생존 분포는 완전히 동일하다.
+death_time <- rweibull(n, shape = 0.7, scale = 10)
+
+# 3. 치료군(group=1)에만 치료 시작 시간을 무작위로 부여한다.
+# 치료 시작은 위험이 높은 초기 구간(e.g., 0 ~ 2.5) 내에서 이루어진다고 가정한다.
+tx_start_time <- rep(NA, n)
+tx_start_time[group == 1] <- runif(sum(group == 1), 0, 2.5)
+
+df_base <- tibble(
   id = 1:n,
-  death_time = true_death_time,
-  tx_start_time = time_to_tx,
-  event = 1 
+  group = group,
+  death_time = death_time,
+  tx_start_time = tx_start_time,
+  event = 1
 )
 
-# Immortal Time Bias를 유발하는 분석 오류 재현
-# "Ever Treated" 그룹에서 치료 시작 전 사망자를 제외
-df_biased <- df %>%
-  filter(!(!is.na(tx_start_time) & death_time < tx_start_time)) %>%
-  mutate(
-    group = ifelse(is.na(tx_start_time), "Never Treated", "Ever Treated")
-  )
+# 4. 잘못된 분석 데이터셋을 구축한다.
+# 4-1. 대조군(group=0) 데이터: Time-zero는 배정 시점(0)이다.
+df_control <- df_base %>% 
+  filter(group == 0) %>%
+  mutate(fup_time = death_time)
 
-biased_model <- coxph(Surv(death_time, event) ~ group, data = df_biased, model = T)
-cat("--- Biased Analysis with Immortal Time ---\n")
+# 4-2. 치료군(group=1) 데이터: 잘못된 분석 적용
+df_treated_biased <- df_base %>%
+  filter(group == 1) %>%
+  # 오류 (a): "초기 위험 구간"에서의 사망자 제외 (Immortal Time)
+  filter(death_time >= tx_start_time) %>%
+  # 오류 (b): 치료 시작 시점을 새로운 Time-zero로 설정
+  mutate(fup_time = death_time - tx_start_time)
+
+# 4-3. 두 데이터셋을 합친다.
+df_final_biased <- bind_rows(
+  df_control,
+  df_treated_biased
+) %>%
+  mutate(group_fct = factor(group, labels = c("Control", "Treatment")))
+
+# 5. 편향이 발생한 모델을 분석한다.
+biased_model <- coxph(Surv(fup_time, event) ~ group_fct, data = df_final_biased, model = T)
+cat("--- Biased Analysis with Early High-Risk & Flawed Design ---\n")
 cox2.display(biased_model)
 ```
 코드 해석: 위 시뮬레이션에서는 치료(HRT)가 생존에 아무런 영향을 주지 않도록 설계했다. 하지만 filter() 구문을 통해 '치료를 받기 전에 사망한 환자'를 분석에서 제외하는 오류를 적용하자, 'Ever Treated' 그룹의 Hazard Ratio(exp(coef))는 약 0.73으로 나타난다.
