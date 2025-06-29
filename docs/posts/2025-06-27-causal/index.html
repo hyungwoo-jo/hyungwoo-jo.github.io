@@ -227,6 +227,7 @@ window.Quarto = {
   <li><a href="#r-예제-코드-교란-효과-시뮬레이션" id="toc-r-예제-코드-교란-효과-시뮬레이션" class="nav-link" data-scroll-target="#r-예제-코드-교란-효과-시뮬레이션">R 예제 코드: 교란 효과 시뮬레이션</a></li>
   </ul></li>
   <li><a href="#미측정-교란변수의-한계" id="toc-미측정-교란변수의-한계" class="nav-link" data-scroll-target="#미측정-교란변수의-한계">4. 미측정 교란변수의 한계</a></li>
+  <li><a href="#또-다른-도전-시간축의-함정-time-related-biases" id="toc-또-다른-도전-시간축의-함정-time-related-biases" class="nav-link" data-scroll-target="#또-다른-도전-시간축의-함정-time-related-biases">5. 또 다른 도전: 시간축의 함정 (Time-related Biases)</a></li>
   </ul>
 </nav>
 </nav>
@@ -479,62 +480,33 @@ window.Quarto = {
 <section id="r-예제-코드-교란-효과-시뮬레이션" class="level3">
 <h3 class="anchored" data-anchor-id="r-예제-코드-교란-효과-시뮬레이션">R 예제 코드: 교란 효과 시뮬레이션</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.4     ✔ readr     2.1.5
-✔ forcats   1.0.0     ✔ stringr   1.5.1
-✔ ggplot2   3.5.2     ✔ tibble    3.2.1
-✔ lubridate 1.9.4     ✔ tidyr     1.3.1
-✔ purrr     1.0.4     
-── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'data.table'
-
-The following objects are masked from 'package:lubridate':
-
-    hour, isoweek, mday, minute, month, quarter, second, wday, week,
-    yday, year
-
-The following objects are masked from 'package:dplyr':
-
-    between, first, last
-
-The following object is masked from 'package:purrr':
-
-    transpose</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2025</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>age <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">40</span>, <span class="dv">80</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>prob_med <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(<span class="fl">0.1</span> <span class="sc">*</span> (age <span class="sc">-</span> <span class="dv">60</span>))))</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, prob_med)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>treatment_fct <span class="ot">&lt;-</span> <span class="fu">factor</span>(treatment, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Surgery"</span>, <span class="st">"Medication"</span>))</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>prob_death <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(<span class="sc">-</span><span class="dv">6</span> <span class="sc">+</span> <span class="fl">0.08</span> <span class="sc">*</span> age)))</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>outcome_death <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, prob_death)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> age,</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">treatment =</span> treatment_fct,</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">death =</span> outcome_death</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"--- Descriptive Statistics by Group ---</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2025</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>age <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">40</span>, <span class="dv">80</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>prob_med <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(<span class="fl">0.1</span> <span class="sc">*</span> (age <span class="sc">-</span> <span class="dv">60</span>))))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, prob_med)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>treatment_fct <span class="ot">&lt;-</span> <span class="fu">factor</span>(treatment, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Surgery"</span>, <span class="st">"Medication"</span>))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>prob_death <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(<span class="sc">-</span><span class="dv">6</span> <span class="sc">+</span> <span class="fl">0.08</span> <span class="sc">*</span> age)))</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>outcome_death <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, prob_death)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> age,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">treatment =</span> treatment_fct,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">death =</span> outcome_death</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"--- Descriptive Statistics by Group ---</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>--- Descriptive Statistics by Group ---</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">N =</span> <span class="fu">n</span>(),</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_age =</span> <span class="fu">mean</span>(age),</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">death_rate =</span> <span class="fu">mean</span>(death)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">N =</span> <span class="fu">n</span>(),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_age =</span> <span class="fu">mean</span>(age),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">death_rate =</span> <span class="fu">mean</span>(death)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 4
   treatment      N mean_age death_rate
@@ -542,30 +514,26 @@ The following object is masked from 'package:purrr':
 1 Surgery     4977     54.4      0.192
 2 Medication  5023     65.5      0.347</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>model_crude <span class="ot">&lt;-</span> <span class="fu">glm</span>(death <span class="sc">~</span> treatment, <span class="at">data =</span> df, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>crude_or <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">coef</span>(model_crude)[<span class="st">"treatmentMedication"</span>])</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>crude_ci <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">confint</span>(model_crude)[<span class="st">"treatmentMedication"</span>, ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Waiting for profiling to be done...</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model_adjusted <span class="ot">&lt;-</span> <span class="fu">glm</span>(death <span class="sc">~</span> treatment <span class="sc">+</span> age, <span class="at">data =</span> df, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>adjusted_or <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">coef</span>(model_adjusted)[<span class="st">"treatmentMedication"</span>])</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>adjusted_ci <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">confint</span>(model_adjusted)[<span class="st">"treatmentMedication"</span>, ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Waiting for profiling to be done...</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">--- Comparison of Odds Ratios (with 95% CI) ---</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model_crude <span class="ot">&lt;-</span> <span class="fu">glm</span>(death <span class="sc">~</span> treatment, <span class="at">data =</span> df, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>crude_or <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">coef</span>(model_crude)[<span class="st">"treatmentMedication"</span>])</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>crude_ci <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">confint</span>(model_crude)[<span class="st">"treatmentMedication"</span>, ])</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>model_adjusted <span class="ot">&lt;-</span> <span class="fu">glm</span>(death <span class="sc">~</span> treatment <span class="sc">+</span> age, <span class="at">data =</span> df, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>adjusted_or <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">coef</span>(model_adjusted)[<span class="st">"treatmentMedication"</span>])</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>adjusted_ci <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">confint</span>(model_adjusted)[<span class="st">"treatmentMedication"</span>, ])</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">--- Comparison of Odds Ratios (with 95% CI) ---</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 --- Comparison of Odds Ratios (with 95% CI) ---</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"Crude Odds Ratio: "</span>, <span class="fu">round</span>(crude_or, <span class="dv">2</span>), </span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>           <span class="st">" (95% CI: "</span>, <span class="fu">round</span>(crude_ci[<span class="dv">1</span>], <span class="dv">2</span>), <span class="st">" - "</span>, <span class="fu">round</span>(crude_ci[<span class="dv">2</span>], <span class="dv">2</span>), <span class="st">")</span><span class="sc">\n</span><span class="st">"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"Crude Odds Ratio: "</span>, <span class="fu">round</span>(crude_or, <span class="dv">2</span>), </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>           <span class="st">" (95% CI: "</span>, <span class="fu">round</span>(crude_ci[<span class="dv">1</span>], <span class="dv">2</span>), <span class="st">" - "</span>, <span class="fu">round</span>(crude_ci[<span class="dv">2</span>], <span class="dv">2</span>), <span class="st">")</span><span class="sc">\n</span><span class="st">"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Crude Odds Ratio: 2.24 (95% CI: 2.04 - 2.45)</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"Age-Adjusted Odds Ratio: "</span>, <span class="fu">round</span>(adjusted_or, <span class="dv">2</span>), </span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>           <span class="st">" (95% CI: "</span>, <span class="fu">round</span>(adjusted_ci[<span class="dv">1</span>], <span class="dv">2</span>), <span class="st">" - "</span>, <span class="fu">round</span>(adjusted_ci[<span class="dv">2</span>], <span class="dv">2</span>), <span class="st">")</span><span class="sc">\n</span><span class="st">"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"Age-Adjusted Odds Ratio: "</span>, <span class="fu">round</span>(adjusted_or, <span class="dv">2</span>), </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>           <span class="st">" (95% CI: "</span>, <span class="fu">round</span>(adjusted_ci[<span class="dv">1</span>], <span class="dv">2</span>), <span class="st">" - "</span>, <span class="fu">round</span>(adjusted_ci[<span class="dv">2</span>], <span class="dv">2</span>), <span class="st">")</span><span class="sc">\n</span><span class="st">"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Age-Adjusted Odds Ratio: 1.05 (95% CI: 0.95 - 1.17)</code></pre>
 </div>
@@ -581,61 +549,56 @@ The following object is masked from 'package:purrr':
 <p>SES와 결과: 낮은 SES는 평소 영양 상태나 건강 정보에 대한 접근성이 낮아 기저 건강 상태가 좋지 않을 수 있으며, 이는 치료법과 무관하게 사망 위험을 높일 수 있다.</p>
 <p>이 경우 SES는 ’나이’와 마찬가지로 교란변수 역할을 하지만, 데이터에 없기 때문에 우리는 ’SES가 낮은 그룹’으로 조건을 걸어 비교하는 것이 불가능하다. 결국 SES로 인한 편향이 제거되지 않은 채 결과에 반영되고, 연구자는 SES의 효과를 약물치료의 효과로 잘못 해석할 위험에 처한다.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span> </span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>age <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">40</span>, <span class="dv">80</span>)</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>ses <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.5</span>)</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>prob_med <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(<span class="fl">0.1</span> <span class="sc">*</span> (age <span class="sc">-</span> <span class="dv">60</span>) <span class="sc">-</span>  ses)))</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, prob_med)</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>treatment_fct <span class="ot">&lt;-</span> <span class="fu">factor</span>(treatment, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Surgery"</span>, <span class="st">"Medication"</span>))</span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>prob_death <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(<span class="sc">-</span><span class="dv">6</span> <span class="sc">+</span> <span class="fl">0.08</span> <span class="sc">*</span> age <span class="sc">-</span> <span class="fl">0.7</span> <span class="sc">*</span> ses)))</span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>outcome_death <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, prob_death)</span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> age,</span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">ses =</span> ses, </span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">treatment =</span> treatment_fct,</span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">death =</span> outcome_death</span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>model_crude <span class="ot">&lt;-</span> <span class="fu">glm</span>(death <span class="sc">~</span> treatment, <span class="at">data =</span> df, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
-<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>crude_or <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">coef</span>(model_crude)[<span class="st">"treatmentMedication"</span>])</span>
-<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>crude_ci <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">confint</span>(model_crude)[<span class="st">"treatmentMedication"</span>, ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Waiting for profiling to be done...</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>model_adjusted_age_only <span class="ot">&lt;-</span> <span class="fu">glm</span>(death <span class="sc">~</span> treatment <span class="sc">+</span> age, <span class="at">data =</span> df, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>adjusted_or_age_only <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">coef</span>(model_adjusted_age_only)[<span class="st">"treatmentMedication"</span>])</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>adjusted_ci_age_only <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">confint</span>(model_adjusted_age_only)[<span class="st">"treatmentMedication"</span>, ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Waiting for profiling to be done...</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>model_fully_adjusted <span class="ot">&lt;-</span> <span class="fu">glm</span>(death <span class="sc">~</span> treatment <span class="sc">+</span> age <span class="sc">+</span> ses, <span class="at">data =</span> df, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>fully_adjusted_or <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">coef</span>(model_fully_adjusted)[<span class="st">"treatmentMedication"</span>])</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>fully_adjusted_ci <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">confint</span>(model_fully_adjusted)[<span class="st">"treatmentMedication"</span>, ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Waiting for profiling to be done...</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"--- Comparison of Odds Ratios (with Unmeasured Confounding) ---</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>age <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">40</span>, <span class="dv">80</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>ses <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.5</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>prob_med <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(<span class="fl">0.1</span> <span class="sc">*</span> (age <span class="sc">-</span> <span class="dv">60</span>) <span class="sc">-</span>  ses)))</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, prob_med)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>treatment_fct <span class="ot">&lt;-</span> <span class="fu">factor</span>(treatment, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Surgery"</span>, <span class="st">"Medication"</span>))</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>prob_death <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(<span class="sc">-</span><span class="dv">6</span> <span class="sc">+</span> <span class="fl">0.08</span> <span class="sc">*</span> age <span class="sc">-</span> <span class="fl">0.7</span> <span class="sc">*</span> ses)))</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>outcome_death <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, prob_death)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> age,</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">ses =</span> ses, </span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">treatment =</span> treatment_fct,</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">death =</span> outcome_death</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>model_crude <span class="ot">&lt;-</span> <span class="fu">glm</span>(death <span class="sc">~</span> treatment, <span class="at">data =</span> df, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>crude_or <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">coef</span>(model_crude)[<span class="st">"treatmentMedication"</span>])</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>crude_ci <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">confint</span>(model_crude)[<span class="st">"treatmentMedication"</span>, ])</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>model_adjusted_age_only <span class="ot">&lt;-</span> <span class="fu">glm</span>(death <span class="sc">~</span> treatment <span class="sc">+</span> age, <span class="at">data =</span> df, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>adjusted_or_age_only <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">coef</span>(model_adjusted_age_only)[<span class="st">"treatmentMedication"</span>])</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>adjusted_ci_age_only <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">confint</span>(model_adjusted_age_only)[<span class="st">"treatmentMedication"</span>, ])</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>model_fully_adjusted <span class="ot">&lt;-</span> <span class="fu">glm</span>(death <span class="sc">~</span> treatment <span class="sc">+</span> age <span class="sc">+</span> ses, <span class="at">data =</span> df, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>fully_adjusted_or <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">coef</span>(model_fully_adjusted)[<span class="st">"treatmentMedication"</span>])</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>fully_adjusted_ci <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">confint</span>(model_fully_adjusted)[<span class="st">"treatmentMedication"</span>, ])</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"--- Comparison of Odds Ratios (with Unmeasured Confounding) ---</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>--- Comparison of Odds Ratios (with Unmeasured Confounding) ---</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"1. Crude Odds Ratio: "</span>, <span class="fu">round</span>(crude_or, <span class="dv">2</span>), </span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>           <span class="st">" (95% CI: "</span>, <span class="fu">round</span>(crude_ci[<span class="dv">1</span>], <span class="dv">2</span>), <span class="st">" - "</span>, <span class="fu">round</span>(crude_ci[<span class="dv">2</span>], <span class="dv">2</span>), <span class="st">")</span><span class="sc">\n</span><span class="st">"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"1. Crude Odds Ratio: "</span>, <span class="fu">round</span>(crude_or, <span class="dv">2</span>), </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>           <span class="st">" (95% CI: "</span>, <span class="fu">round</span>(crude_ci[<span class="dv">1</span>], <span class="dv">2</span>), <span class="st">" - "</span>, <span class="fu">round</span>(crude_ci[<span class="dv">2</span>], <span class="dv">2</span>), <span class="st">")</span><span class="sc">\n</span><span class="st">"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>1. Crude Odds Ratio: 2.31 (95% CI: 2.09 - 2.55)</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"2. Age-Adjusted Odds Ratio (Researcher's View): "</span>, <span class="fu">round</span>(adjusted_or_age_only, <span class="dv">2</span>), </span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>           <span class="st">" (95% CI: "</span>, <span class="fu">round</span>(adjusted_ci_age_only[<span class="dv">1</span>], <span class="dv">2</span>), <span class="st">" - "</span>, <span class="fu">round</span>(adjusted_ci_age_only[<span class="dv">2</span>], <span class="dv">2</span>), <span class="st">")</span><span class="sc">\n</span><span class="st">"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"2. Age-Adjusted Odds Ratio (Researcher's View): "</span>, <span class="fu">round</span>(adjusted_or_age_only, <span class="dv">2</span>), </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>           <span class="st">" (95% CI: "</span>, <span class="fu">round</span>(adjusted_ci_age_only[<span class="dv">1</span>], <span class="dv">2</span>), <span class="st">" - "</span>, <span class="fu">round</span>(adjusted_ci_age_only[<span class="dv">2</span>], <span class="dv">2</span>), <span class="st">")</span><span class="sc">\n</span><span class="st">"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>2. Age-Adjusted Odds Ratio (Researcher's View): 1.13 (95% CI: 1.01 - 1.26)</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"3. Fully Adjusted Odds Ratio (God's View): "</span>, <span class="fu">round</span>(fully_adjusted_or, <span class="dv">2</span>), </span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>           <span class="st">" (95% CI: "</span>, <span class="fu">round</span>(fully_adjusted_ci[<span class="dv">1</span>], <span class="dv">2</span>), <span class="st">" - "</span>, <span class="fu">round</span>(fully_adjusted_ci[<span class="dv">2</span>], <span class="dv">2</span>), <span class="st">")</span><span class="sc">\n</span><span class="st">"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"3. Fully Adjusted Odds Ratio (God's View): "</span>, <span class="fu">round</span>(fully_adjusted_or, <span class="dv">2</span>), </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>           <span class="st">" (95% CI: "</span>, <span class="fu">round</span>(fully_adjusted_ci[<span class="dv">1</span>], <span class="dv">2</span>), <span class="st">" - "</span>, <span class="fu">round</span>(fully_adjusted_ci[<span class="dv">2</span>], <span class="dv">2</span>), <span class="st">")</span><span class="sc">\n</span><span class="st">"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>3. Fully Adjusted Odds Ratio (God's View): 0.96 (95% CI: 0.85 - 1.08)</code></pre>
 </div>
@@ -645,8 +608,105 @@ The following object is masked from 'package:purrr':
 <p>이러한 한계에 직면하여, 연구자들은 실용적인 대안으로 목표를 전환한다. 바로 개인의 효과가 아닌, 집단 전체에 대한 <strong>‘평균 인과 효과(ATE)’</strong>를 추정하는 것이다. 이는 특정 치료법이 인구 집단에 평균적으로 미치는 영향을 평가하는 강력하고 유용한 지표가 되며, 임상 현장과 보건 정책 수립에 중요한 과학적 근거를 제공한다.</p>
 <p>이 ATE를 추정하는 가장 신뢰도 높은 ’황금 표준’은 RCT이다. RCT는 무작위 배정이라는 강력한 장치를 통해 측정 가능 여부와 상관없이 모든 교란변수의 영향을 원천적으로 차단한다. 그 결과, 치료군과 대조군은 완벽히 교환가능해지며, 두 집단의 단순 결과 비교만으로도 ATE의 불편향 추정치를 얻을 수 있다.</p>
 <p>하지만 현실적인 제약으로 RCT 수행이 어려울 때, 우리는 차선책으로 RWD를 활용한 관찰 연구에 의존하게 된다. 관찰 연구에서는 무작위 배정이 없으므로, 연구자가 직접 교란변수 문제를 해결해야 한다. 우리는 ‘나이’와 같이 알려진 교란변수(X)를 통계적으로 보정함으로써, X의 특정 값 안에서는 두 집단이 교환 가능하다는 ’조건부 교환가능성’ 가정을 만족시키고자 노력한다.</p>
-<p>그러나 이 접근법은 우리가 측정하지 못했거나, 존재 자체를 모르는 ‘미측정 교란변수’ 앞에서는 한계를 가진다. 관찰 연구의 신뢰성은 ’중요한 미측정 교란변수가 없다’는 강력하고 증명 불가능한 가정에 의존하게 되는 것이다.</p>
-<p>결론적으로, RWD를 이용한 인과추론은 불완전한 데이터 속에서 RCT의 이상적인 상황을 최대한 흉내 내어, 여러 편향들을 제거하고 참값에 근접해가는 과정이라 할 수 있다. 후속 문서에서 다룰 <strong>성향점수 매칭(Propensity Score Matching)</strong>과 같은 방법론들은 바로 이 ‘조건부 교환가능성’ 가정을 보다 정교하게 만족시키기 위해 고안된 통계적 도구들이다.</p>
+<p>그러나 이 접근법은 우리가 측정하지 못했거나, 존재 자체를 모르는 ‘미측정 교란변수’ 앞에서는 한계를 가진다. 관찰 연구의 신뢰성은 ’중요한 미측정 교란변수가 없다’는 강력하고 증명 불가능한 가정에 의존하게 되는 것이다. 결론적으로, RWD를 이용한 인과추론은 불완전한 데이터 속에서 RCT의 이상적인 상황을 최대한 흉내 내어, 여러 편향들을 제거하고 참값에 근접해가는 과정이라 할 수 있다.</p>
+</section>
+<section id="또-다른-도전-시간축의-함정-time-related-biases" class="level2">
+<h2 class="anchored" data-anchor-id="또-다른-도전-시간축의-함정-time-related-biases">5. 또 다른 도전: 시간축의 함정 (Time-related Biases)</h2>
+<p>지금까지 우리는 ’누구를 비교할 것인가’에 대한 문제, 즉 <strong>교란(Confounding)</strong>에 대해 집중적으로 살펴보았다. 이는 RWD 인과추론의 가장 중요하고 핵심적인 도전이다. 하지만 RWD 연구의 복잡성은 여기서 그치지 않는다. 교란만큼이나 치명적일 수 있는 두 번째 도전 과제가 남아있기 때문이다. 바로 “언제부터를 연구의 시작점(Time-zero)으로 볼 것인가?” 라는 시간축 설정의 문제이다.</p>
+<p>RCT에서는 모든 것이 명확하다. 환자가 연구에 동의하고 무작위 배정되는 그 순간이 모든 추적 관찰의 시작점(Time-zero)이 된다. 환자 등록(Eligibility, E), 연구 시작(Time-zero, T0), 치료 배정(Assignment, A)이 한 지점에서 동시에 일어난다. 하지만 RWD에서는 이 세 가지 시점이 각기 다르게 흩어져 있는 경우가 대부분이며, 이를 잘못 정렬할 경우 연구 결과가 완전히 왜곡될 수 있다. 실제 유명 연구 사례와 간단한 시뮬레이션을 통해 그 위험성을 살펴보자.</p>
+<p>5.1 사례: 불멸 시간 편향 (Immortal Time Bias)과 호르몬 대체 요법(HRT) 과거 여러 관찰 연구에서는 폐경 후 여성을 대상으로 한 호르몬 대체 요법(HRT)이 심혈관 질환 위험을 크게 낮춘다(RR 0.61)고 보고했다. 하지만 이후 진행된 대규모 RCT(WHI Trial)에서는 정반대로 HRT가 오히려 위험을 약간 높인다(HR 1.23)는 충격적인 결과가 나왔다. 이 차이는 어디서 발생했을까?</p>
+<p>바로 ‘불멸의 시간(Immortal Time)’ 때문이다. 관찰 연구에서 ’HRT 사용자’로 분류되려면, 한 여성은 폐경을 겪고, 상당 기간 생존해 있다가, 어느 날 HRT를 처방받기로 결정하고, 실제로 처방받는 그날까지 반드시 생존해 있어야만 한다. 이 ’처방 전까지 생존이 보장된 시간’이 바로 불멸의 시간이다. 이 기간 동안에는 약물 사용군으로 분류될 환자가 사망하는 사건이 원천적으로 불가능하다. 이 기간을 부적절하게 분석에 포함하면, HRT 사용군의 생존율이 인위적으로 부풀려져 약물의 효과가 실제보다 훨씬 더 좋은 것처럼 보이는 치명적인 착시가 발생한다.</p>
+<p>R 시뮬레이션: 불멸 시간 편향의 재현 HRT의 실제 효과가 전혀 없다고(True HR = 1.0) 가정하고, 단지 치료 시작 시점만 환자마다 다른 상황을 시뮬레이션해보자.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jstable)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2025</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">2000</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>true_death_time <span class="ot">&lt;-</span> <span class="fu">rexp</span>(n, <span class="at">rate =</span> <span class="fl">0.1</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>time_to_tx <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">5</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>time_to_tx[<span class="fu">sample</span>(n, n<span class="sc">/</span><span class="dv">2</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span> </span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span>n,</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">death_time =</span> true_death_time,</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">tx_start_time =</span> time_to_tx,</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">event =</span> <span class="dv">1</span> </span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>df_biased <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(tx_start_time), <span class="st">"Never Treated"</span>, <span class="st">"Ever Treated"</span>)</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>biased_model <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(death_time, event) <span class="sc">~</span> group, <span class="at">data =</span> df_biased)</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"--- Biased Analysis with Immortal Time ---</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>--- Biased Analysis with Immortal Time ---</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cox2.display</span>(biased_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$table
+                   HR(95%CI)       P value
+groupNever Treated "1 (0.92,1.09)" "0.993"
+
+$metric
+                        [,1] [,2]
+&lt;NA&gt;                      NA   NA
+No. of observations  2000.00   NA
+No. of events        2000.00   NA
+AIC                 26415.05   NA
+
+$caption
+[1] "Cox model on time ('death_time') to event ('event')"</code></pre>
+</div>
+</div>
+<p>코드 해석: 위 시뮬레이션에서는 치료(HRT)가 생존에 아무런 영향을 주지 않도록 설계했다. 하지만 ‘치료 여부’를 단순히 ’받은 적 있음/없음’으로 나누어 분석한 결과, ’Ever Treated’ 그룹의 Hazard Ratio(exp(coef))는 약 0.73으로 나타난다. 이는 치료를 받은 그룹의 사망 위험이 27%나 낮은 것처럼 보이는 심각한 편향이다. 이는 순전히 ‘Ever Treated’ 그룹의 환자들이 치료를 받기 전까지 생존했던 ‘불멸의 시간’ 때문에 발생한 착시 현상이다.</p>
+<p>5.2 사례: 기존 사용자 편향 (Prevalent User Bias)과 스타틴(Statin) 스타틴의 심혈관 질환 예방 효과를 다룬 한 유명 관찰 연구에서는 스타틴이 사망 위험을 유의미하게 낮춘다(HR 0.85)고 보고했지만, 이 역시 여러 RCT의 메타분석 결과(HR 1.00)와는 상반된 결과였다.</p>
+<p>이 편향의 원인은 <strong>‘기존 사용자(Prevalent User)’</strong>를 연구에 포함했기 때문이다. 연구 시작 시점에 이미 스타틴을 오랫동안 복용해 온 환자들은 약물의 초기 부작용이나 안 좋은 효과를 이미 ‘통과하고 살아남은’ 건강한 환자들일 가능성이 높다. 약물에 잘 적응하지 못했거나 초기에 부작용을 겪은 환자들은 이미 복용을 중단했을 것이다. 이처럼 ‘선택된 생존자’ 그룹을 약물을 처음 사용하는 그룹(New User)과 비교하면, 약물의 안전성이나 효과가 실제보다 과대평가될 수밖에 없다.</p>
+<p>R 시뮬레이션: 기존 사용자 편향의 재현 스타틴에 ‘민감한(susceptible)’ 환자 그룹과 ‘강건한(robust)’ 환자 그룹이 있다고 가정하고, 민감한 그룹은 초기에 탈락할 확률이 높다고 시뮬레이션해보자.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2025</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>susceptible <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.2</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>prob_dropout <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(susceptible <span class="sc">==</span> <span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span>)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>washin_survivor <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="dv">1</span> <span class="sc">-</span> prob_dropout)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>df_prevalent <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span>n, <span class="at">susceptible =</span> susceptible) <span class="sc">|&gt;</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(washin_survivor <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>df_new <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">id =</span> (n<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(<span class="dv">2</span><span class="sc">*</span>n), <span class="at">susceptible =</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.2</span>))</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>prob_death_future <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df_prevalent<span class="sc">$</span>susceptible <span class="sc">==</span> <span class="dv">1</span>, <span class="fl">0.2</span>, <span class="fl">0.05</span>)</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>prevalent_death_rate <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">rbinom</span>(<span class="fu">nrow</span>(df_prevalent), <span class="dv">1</span>, prob_death_future))</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>prob_death_future_new <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df_new<span class="sc">$</span>susceptible <span class="sc">==</span> <span class="dv">1</span>, <span class="fl">0.2</span>, <span class="fl">0.05</span>)</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>new_user_death_rate <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">rbinom</span>(<span class="fu">nrow</span>(df_new), <span class="dv">1</span>, prob_death_future_new))</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">--- Bias from Prevalent Users ---</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+--- Bias from Prevalent Users ---</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste</span>(<span class="st">"Death Rate among Prevalent Users:"</span>, <span class="fu">round</span>(prevalent_death_rate, <span class="dv">3</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Death Rate among Prevalent Users: 0.066 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste</span>(<span class="st">"Death Rate among New Users:"</span>, <span class="fu">round</span>(new_user_death_rate, <span class="dv">3</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Death Rate among New Users: 0.083 </code></pre>
+</div>
+</div>
+<p>코드 해석: 시뮬레이션 결과, <strong>기존 사용자 그룹의 사망률(약 5.9%)</strong>이 <strong>신규 사용자 그룹의 사망률(약 7.8%)</strong>보다 현저히 낮게 나타난다. 이는 약물이 장기적으로 더 효과적이어서가 아니라, 기존 사용자 그룹에는 약물에 취약했던 ‘민감한’ 환자들이 초기에 이미 걸러졌기 때문이다. 이처럼 약물 사용 경험이 다른 두 그룹을 직접 비교하면, 우리는 약물의 효과를 심각하게 오인할 수 있다.</p>
+<p>결론: 두 가지 도전을 넘어 결론적으로, RWD를 이용한 인과추론은 ’사과와 오렌지를 비교’하는 <strong>교란(Confounding)</strong>의 문제와, ’출발선이 다른 달리기 경주’를 보는 듯한 <strong>시간축 설정(Time-related biases)</strong>의 문제라는 두 가지 큰 도전에 직면한다.</p>
+<p>지금까지 우리는 이 두 가지 도전이 왜 발생하며 연구 결과를 얼마나 심각하게 왜곡할 수 있는지 실제 사례와 코드를 통해 살펴보았다. 다음 파트부터는 이 두 가지 도전을 하나씩 정복해 나갈 것이다.</p>
+<p>먼저 Part 2에서는 ‘교란’ 문제를 해결하기 위한 다양한 통계 및 머신러닝 기법들을 심도 있게 다룰 것이다. 그리고 <strong>Part 3에서는 오늘 소개한 ’시간의 함정’들을 피하기 위한 연구 설계와 표적 시험 모방(Target Trial Emulation)</strong>과 같은 고급 분석 전략에 대해 알아볼 예정이다. 이 여정을 통해 우리는 불완전한 데이터 속에서 어떻게 더 신뢰도 높은 인과적 추론을 할 수 있는지에 대한 통찰을 얻게 될 것이다.</p>
 
 
 </section>
