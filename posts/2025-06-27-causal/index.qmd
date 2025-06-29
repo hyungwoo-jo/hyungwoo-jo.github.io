@@ -300,27 +300,23 @@ library(tidyverse)
 library(survival)
 library(jstable)
 set.seed(2025)
-n <- 2000
+n <- 10000
 
-true_death_time <- rexp(n, rate = 0.1)
-
+true_death_time <- rexp(n, rate = 0.3)
 time_to_tx <- runif(n, 0, 5)
 time_to_tx[sample(n, n/2)] <- NA 
-
 df <- tibble(
   id = 1:n,
   death_time = true_death_time,
   tx_start_time = time_to_tx,
   event = 1 
 )
-
-
-df_biased <- df |>
+df_biased <- df %>%
+  filter(!(!is.na(tx_start_time) & death_time < tx_start_time)) %>%
   mutate(
     group = ifelse(is.na(tx_start_time), "Never Treated", "Ever Treated")
   )
-
-biased_model <- coxph(Surv(death_time, event) ~ group, data = df_biased)
+biased_model <- coxph(Surv(death_time, event) ~ group, data = df_biased, model = T)
 cat("--- Biased Analysis with Immortal Time ---\n")
 cox2.display(biased_model)
 ```
