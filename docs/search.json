@@ -2,16 +2,16 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Hyungwoo’s Blog",
+    "title": "Blog",
     "section": "",
-    "text": "Welcome to my blog! I share insights on statistics, R programming, and causal inference with a focus on practical applications in research and data analysis.\n\n\n\n\n\n\n\n   \n     \n     \n       Order By\n       Default\n         \n          Title\n        \n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n의학 인과추론의 핵심: 교란 변수 선택법 심층 분석\n\n\n\nCausal Inference\n\n\nStatistics\n\n\nMethodology\n\n\n\n교란 변수 선택의 전통적 관행부터 DAG, 멘델 무작위화, 최신 머신러닝 기법까지, 의학 인과추론의 핵심 방법론을 총망라합니다.\n\n\n\nJul 14, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCausal Inference (1)\n\n\n\nstatistics\n\n\n\n의학 연구에서의 인과추론: 기본 개념\n\n\n\nJun 27, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCompeting Risk Analysis\n\n\n\nstatistics\n\n\n\nCompeting Risk Analysis의 원리와 결과가 가지는 의미를 살펴봅니다\n\n\n\nJan 3, 2025\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Order By\n       Default\n         \n          Title\n        \n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\nCausal Inference (1)\n\n\n\nstatistics\n\n\n\n의학 연구에서의 인과추론: 기본 개념\n\n\n\nJun 27, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCompeting Risk Analysis\n\n\n\nstatistics\n\n\n\nCompeting Risk Analysis의 원리와 결과가 가지는 의미를 살펴봅니다\n\n\n\nJan 3, 2025\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
     "href": "about.html",
-    "title": "About Me",
+    "title": "About",
     "section": "",
-    "text": "I’m Hyungwoo Jo, a researcher with deep interests in psychiatry and statistics. Through this blog, I share insights and practical applications in:\n\nCausal Inference - Understanding cause-and-effect relationships in medical research\nStatistical Methods - Exploring advanced statistical techniques and their applications\n\nR Programming - Demonstrating statistical computing solutions with R\n\n\n\nMy posts focus on bridging the gap between statistical theory and practical implementation, particularly in the context of medical and psychiatric research. I aim to make complex statistical concepts accessible while maintaining methodological rigor.\n\n\n\nI’m passionate about applying rigorous statistical methods to understand complex phenomena in psychiatry and medicine. My work involves exploring causal relationships, handling competing risks, and developing robust analytical approaches for real-world data challenges."
+    "text": "This blog focuses on statistics, R programming, and data analysis with practical applications in research.\nTopics include statistical methods, data visualization, and computational approaches to solving analytical problems."
   },
   {
     "objectID": "about.html#hi-there",

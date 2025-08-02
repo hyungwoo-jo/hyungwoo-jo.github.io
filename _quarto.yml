@@ -2,8 +2,8 @@ project:
   type: website
   output-dir: docs
 website:
-  title: "Hyungwoo Jo"
-  description: "Statistics, R Programming, and Causal Inference Blog"
+  title: "Blog"
+  description: "Statistics, R Programming, and Data Analysis"
   navbar:
     background: light
     left:
@@ -20,7 +20,7 @@ website:
 format:
   html:
     smooth-scroll: true
-    theme: sandstone
+    theme: flatly
     css: styles.css
     toc: true
     toc-location: "left"
