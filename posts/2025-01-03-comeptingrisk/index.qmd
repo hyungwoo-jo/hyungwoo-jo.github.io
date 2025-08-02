@@ -3,9 +3,6 @@ title: "Competing Risk Analysis"
 description: "Competing Risk Analysis의 원리와 결과가 가지는 의미를 살펴봅니다"
 image: img/image.png
 categories: [statistics]
-author:
-  - name: Hyungwoo Jo
-    url: https://github.com/hyungwoo-jo
 fig_width: 400
 date: 2025-01-03
 format: html
@@ -150,7 +147,7 @@ sample_data <- sample_data %>%
     Depression_num = ifelse(Depression == "Yes", 1, 0)
   ) 
 surv_object_csh <- Surv(time = sample_data$Time, event = sample_data$Event == 1)
-cox_csh <- coxph(surv_object_csh ~ Depression_num, data = sample_data)
+cox_csh <- coxph(surv_object_csh ~ Depression_num, data = sample_data, model = T)
 cox2.display(cox_csh)
 ```
   exp(coef= beta)즉 Hazard ratio가 1이고 p-value가 0.936으로, 우울증 여부가 CVD-death에 영향을 미치지 않는 다는 것을 알 수 있습니다. 이는 데이터를 만들때의 가정과 동일하기 때문에 전통적 생존분석은 이를 잘 반영한다는 것을 알 수 있습니다. 이번엔 competing risk를 고려한 fine gray method로 분석을 해보겠습니다. 
