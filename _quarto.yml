@@ -2,12 +2,21 @@ project:
   type: website
   output-dir: docs
 website:
-  title: "Blog"
+  title: "Hyungwoo Jo"
+  description: "Statistics, R Programming, and Causal Inference Blog"
   navbar:
+    background: light
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Posts"
+        href: index.qmd
+      - text: "About"
+        href: about.qmd
     right:
-      - about.qmd
       - icon: github
         href: https://github.com/sl-eeper
+        aria-label: "GitHub Profile"
 format:
   html:
     smooth-scroll: true

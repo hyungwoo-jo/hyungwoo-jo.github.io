@@ -4,3 +4,13 @@
 .Ruserdata
 
 /.quarto/
+
+# Study/practice files
+*.R
+!posts/**/*.R
+*.Rproj
+to_write.txt
+*.md
+!posts/**/*.md
+!README.md
+!about.md

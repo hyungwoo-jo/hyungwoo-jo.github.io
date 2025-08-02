@@ -1,13 +1,32 @@
 ---
-title: "About"
+title: "About Me"
 image: profile.jpg
 about:
-  template: jolla
+  template: trestles
+  image-width: 15em
+  image-shape: rounded
   links:
     - icon: github
-      text: Github
+      text: GitHub
       href: https://github.com/sl-eeper
+      aria-label: "GitHub Profile"
+    - icon: envelope
+      text: Email
+      href: mailto:your-email@example.com
 ---
 
-# Hyungwoo Jo 
-Interested in Psychiatry and Statistics
+## Hi there! 👋
+
+I'm **Hyungwoo Jo**, a researcher with deep interests in **psychiatry** and **statistics**. Through this blog, I share insights and practical applications in:
+
+- **Causal Inference** - Understanding cause-and-effect relationships in medical research
+- **Statistical Methods** - Exploring advanced statistical techniques and their applications  
+- **R Programming** - Demonstrating statistical computing solutions with R
+
+### What You'll Find Here
+
+My posts focus on bridging the gap between statistical theory and practical implementation, particularly in the context of medical and psychiatric research. I aim to make complex statistical concepts accessible while maintaining methodological rigor.
+
+### Background
+
+I'm passionate about applying rigorous statistical methods to understand complex phenomena in psychiatry and medicine. My work involves exploring causal relationships, handling competing risks, and developing robust analytical approaches for real-world data challenges.
