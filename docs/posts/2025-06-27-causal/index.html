@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.6.42">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta name="author" content="Hyungwoo Jo">
+<meta name="author" content="Anonymous">
 <meta name="dcterms.date" content="2025-06-27">
 <meta name="description" content="의학 연구에서의 인과추론: 기본 개념">
-<title>Causal Inference (1) – Hyungwoo Jo</title>
+<title>Causal Inference (1) – Blog</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -71,7 +71,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-75c6b6284beacd3341e7aa0070694fae.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap-31532e0a7f1fd90059c3306d8d248c7c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -131,7 +131,7 @@ window.Quarto = {
   <header id="quarto-header" class="headroom fixed-top quarto-banner"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">Hyungwoo Jo</span>
+    <span class="navbar-title">Blog</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -184,7 +184,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Author</div>
       <div class="quarto-title-meta-contents">
-               <p><a href="https://github.com/hyungwoo-jo">Hyungwoo Jo</a> </p>
+               <p>Anonymous </p>
             </div>
     </div>
       
@@ -652,11 +652,12 @@ ses                              "0.5 (0.45,0.56)"  "&lt; 0.001"   </code></pre>
 group_obsTreatment "0.87 (0.84,0.91)" "&lt; 0.001"
 
 $metric
-                        [,1] [,2]
-&lt;NA&gt;                      NA   NA
-No. of observations   9009.0   NA
-No. of events         9009.0   NA
-AIC                 146024.3   NA
+                    [,1]               [,2]
+&lt;NA&gt;                NA                 NA  
+No. of observations "9009"             NA  
+No. of events       "9009"             NA  
+AIC                 "146024.260755666" NA  
+C-Index             "0.525(0.003)"     NA  
 
 $caption
 [1] "Cox model on time ('fup_time') to event ('event')"</code></pre>
@@ -739,14 +740,14 @@ treatment: Prevalent User vs Non-User "0.78 (0.7,0.87)" "&lt; 0.001"</code></pre
 <p>RWD를 이용한 인과추론에서 <strong>교란(Confounding)</strong>의 문제와 <strong>시간축 설정(Time-related biases)</strong>의 문제에 대해서 알아보았다. 우리는 시뮬레이션을 통해, <strong>관찰되지 않은 교란변수(Unmeasured Confounder)</strong>가 존재하거나, RWD의 본질적인 시간축 불일치 문제(Immortal Time, Prevalent User Bias)가 있을 때, 우리가 데이터에서 단순하게 관찰한 연관성(association)은 우리가 알고자 하는 <strong>참된 인과적 효과(true causal effect)</strong>와 크게 다를 수 있음을 확인했다. 이는 관찰 연구가 가진 명백하고 본질적인 한계이다. 하지만 이러한 한계를 인지하는 것이 바로 인과추론의 진정한 시작점이다. 통계학자들과 역학자들은 ’이러한 편향이 존재함을 안다면, 그 편향의 크기를 줄여 <strong>편향된 추정치(biased estimate)</strong>를 참값에 최대한 가깝게 만들 수 있지 않을까?’라는 질문에 답하기 위해 수많은 방법론을 발전시켜왔다. 앞으로 이어질 글 들에서는 해당 방법들을 보다 자세히 탐구하도록 하겠다.</p>
 
 
-</section><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{jo2025,
-  author = {Jo, Hyungwoo},
+</section><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{2025,
+  author = {, Anonymous},
   title = {Causal {Inference} (1)},
   date = {2025-06-27},
   langid = {en}
 }
-</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-jo2025" class="csl-entry quarto-appendix-citeas" role="listitem">
-Jo, Hyungwoo. 2025. <span>“Causal Inference (1).”</span> June 27, 2025.
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-2025" class="csl-entry quarto-appendix-citeas" role="listitem">
+Anonymous. 2025. <span>“Causal Inference (1).”</span> June 27, 2025.
 </div></div></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

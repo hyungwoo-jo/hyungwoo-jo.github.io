@@ -1,5 +1,6 @@
 ---
-title: "Blog"
+title: "Analytic Notes"
+subtitle: "Statistics • R Programming • Data Analysis"
 listing:
   contents: posts
   sort: "date desc"

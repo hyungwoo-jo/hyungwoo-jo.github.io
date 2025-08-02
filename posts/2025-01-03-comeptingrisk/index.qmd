@@ -3,6 +3,9 @@ title: "Competing Risk Analysis"
 description: "Competing Risk Analysis의 원리와 결과가 가지는 의미를 살펴봅니다"
 image: img/image.png
 categories: [statistics]
+author:
+  - name: Hyungwoo Jo
+    url: https://github.com/hyungwoo-jo
 fig_width: 400
 date: 2025-01-03
 format: html
