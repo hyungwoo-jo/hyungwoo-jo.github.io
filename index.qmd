@@ -1,5 +1,5 @@
 ---
-title: "Analytic Notes"
+title: "Analytics Notes"
 subtitle: "Statistics • R Programming • Data Analysis"
 listing:
   contents: posts

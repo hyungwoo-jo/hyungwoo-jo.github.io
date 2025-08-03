@@ -68,7 +68,7 @@ body {
   font-size: var(--text-base);
   line-height: 1.6;
   color: var(--color-text-primary);
-  background-color: var(--color-bg-primary);
+  background-color: #ffffff;
   margin: 0;
   padding: 0;
 }
@@ -138,32 +138,40 @@ a:hover {
   padding: 0 var(--spacing-lg);
 }
 
-/* Simple Banner */
-.quarto-title-block {
-  background: #f8f9fa;
-  padding: var(--spacing-xl) 0;
-  text-align: center;
-  border-bottom: 1px solid var(--color-border-light);
+/* Clean Modern Banner */
+.quarto-title-banner {
+  background: #fefefe !important;
+  padding: var(--spacing-2xl) 0 !important;
+  border-bottom: 1px solid #e5e5e5;
 }
 
+.quarto-title-block {
+  background: #fefefe !important;
+  border-bottom: none;
+}
 
 .title {
-  font-size: 2rem !important;
+  font-size: 2.5rem !important;
   font-weight: 600 !important;
-  color: var(--color-text-primary) !important;
+  color: #1e293b !important;
   margin: 0 !important;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.2;
 }
 
 .subtitle {
-  color: var(--color-text-secondary) !important;
-  font-size: var(--text-base) !important;
+  color: #64748b !important;
+  font-size: 1rem !important;
   font-weight: 400 !important;
-  margin-top: var(--spacing-sm) !important;
+  margin-top: 8px !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
 }
 
 .quarto-title-block .description {
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: #64748b !important;
   font-size: var(--text-lg);
   font-weight: 400;
   margin-top: var(--spacing-md);

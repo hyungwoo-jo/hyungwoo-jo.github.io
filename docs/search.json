@@ -2,23 +2,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Analytic Notes",
+    "title": "Analytics Notes",
     "section": "",
     "text": "Order By\n       Default\n         \n          Title\n        \n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\nCausal Inference (1)\n\n\n\nstatistics\n\n\n\n의학 연구에서의 인과추론: 기본 개념\n\n\n\nJun 27, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCompeting Risk Analysis\n\n\n\nstatistics\n\n\n\nCompeting Risk Analysis의 원리와 결과가 가지는 의미를 살펴봅니다\n\n\n\nJan 3, 2025\n\n\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "This blog focuses on statistics, R programming, and data analysis with practical applications in research.\nTopics include statistical methods, data visualization, and computational approaches to solving analytical problems."
-  },
-  {
-    "objectID": "about.html#hi-there",
-    "href": "about.html#hi-there",
-    "title": "About Me",
-    "section": "",
-    "text": "I’m Hyungwoo Jo, a researcher with deep interests in psychiatry and statistics. Through this blog, I share insights and practical applications in:\n\nCausal Inference - Understanding cause-and-effect relationships in medical research\nStatistical Methods - Exploring advanced statistical techniques and their applications\n\nR Programming - Demonstrating statistical computing solutions with R\n\n\n\nMy posts focus on bridging the gap between statistical theory and practical implementation, particularly in the context of medical and psychiatric research. I aim to make complex statistical concepts accessible while maintaining methodological rigor.\n\n\n\nI’m passionate about applying rigorous statistical methods to understand complex phenomena in psychiatry and medicine. My work involves exploring causal relationships, handling competing risks, and developing robust analytical approaches for real-world data challenges."
   },
   {
     "objectID": "posts/2025-01-03-comeptingrisk/index.html",
@@ -138,5 +124,12 @@
     "title": "Causal Inference (1)",
     "section": "6 결론",
     "text": "6 결론\nRWD를 이용한 인과추론에서 교란(Confounding)의 문제와 시간축 설정(Time-related biases)의 문제에 대해서 알아보았다. 우리는 시뮬레이션을 통해, 관찰되지 않은 교란변수(Unmeasured Confounder)가 존재하거나, RWD의 본질적인 시간축 불일치 문제(Immortal Time, Prevalent User Bias)가 있을 때, 우리가 데이터에서 단순하게 관찰한 연관성(association)은 우리가 알고자 하는 참된 인과적 효과(true causal effect)와 크게 다를 수 있음을 확인했다. 이는 관찰 연구가 가진 명백하고 본질적인 한계이다. 하지만 이러한 한계를 인지하는 것이 바로 인과추론의 진정한 시작점이다. 통계학자들과 역학자들은 ’이러한 편향이 존재함을 안다면, 그 편향의 크기를 줄여 편향된 추정치(biased estimate)를 참값에 최대한 가깝게 만들 수 있지 않을까?’라는 질문에 답하기 위해 수많은 방법론을 발전시켜왔다. 앞으로 이어질 글 들에서는 해당 방법들을 보다 자세히 탐구하도록 하겠다."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "This blog focuses on statistics, R programming, and data analysis with practical applications in research.\nTopics include statistical methods, data visualization, and computational approaches to solving analytical problems."
   }
 ]

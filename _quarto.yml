@@ -2,7 +2,7 @@ project:
   type: website
   output-dir: docs
 website:
-  title: "Analytic Notes"
+  title: "Analytics Notes"
   description: "Statistics, R Programming, and Data Analysis"
   navbar:
     background: light
