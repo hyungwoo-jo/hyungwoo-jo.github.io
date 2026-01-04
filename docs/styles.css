@@ -318,7 +318,7 @@ a:hover {
 
 /* About Page */
 .content {
-  max-width: 650px;
+  max-width: 900px;
   margin: var(--spacing-3xl) auto;
   padding: 0 var(--spacing-lg);
 }
