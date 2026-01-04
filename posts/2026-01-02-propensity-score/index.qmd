@@ -1,6 +1,6 @@
 ---
 title: "Causal Inference (2): Propensity Score Matching"
-description: "ATE, ATT의 개념과 Propensity Score에 대해 알아보자"
+description: "ATE와 ATT의 차이, 그리고 Love Plot 해석하기"
 image: img/image.jpg
 categories: [statistics, causal-inference, R]
 author:
@@ -15,180 +15,162 @@ draft: false
 citation: true
 ---
 
-1편에서는 인과추론의 필요성을 역설했다. 2편에서는 실제 의학 연구에서 가장 빈번하게 마주치는 상황을 통해, **성향점수(Propensity Score)**를 이용한 다양한 분석 방법론(**PSM, IPTW**)이 어떻게 다른 결론을 도출하는지, 그리고 그 각각의 결론(**ATT, ATE**)이 어떤 의미를 갖는지 깊이 있게 파고들어 보자.
+1편에서는 인과추론의 필요성에 대해 알아보았다. 2편에서는 실제 의학 연구에서 가장 빈번하게 마주치는 상황을 통해, **성향점수(Propensity Score)**를 이용한 다양한 분석 방법론(**PSM, IPTW, OW**)이 어떻게 다른 결론을 도출하는지, 그리고 그 각각의 결론(**ATT, ATE, ATO**)이 어떤 의미를 갖는지(또 결과가 얼마나 민감한지) 파고들어 보자.
 
-우리는 하나의 일관된 예시를 통해 이 여정을 떠날 것이다.
+------------------------------------------------------------------------
 
----
+## 1. Example: Procedure vs Surgery
 
-## 1. 시나리오: 심장판막 질환의 딜레마
+아래의 예시를 살펴보자. 심장판막 질환 환자에게는 두 가지 선택지가 있다고 가정하자(예시를 위한 것이고 실제 임상적 사실과는 차이가 있을 수 있다)
 
-당신은 심장내과 전문의다. 심장판막 질환 환자에게는 두 가지 선택지가 있다.
+1.  **수술 (Surgery,** $T=1$): 젊은 환자(50\~60대)에게는 완치에 가깝지만, 80대 이상 노인에게는 수술 자체가 사망 위험을 높일 수 있다.
+2.  **시술 (Procedure,** $T=0$): 비침습적 시술. 고령 환자가 주로 선택한다.
 
-1.  **수술 (Surgery, $T=1$)**: 가슴을 여는 개흉 수술. 효과는 확실하지만 체력적 부담이 크다. 주로 **젊고 건강한(50~60대)** 환자들이 선택한다.
-2.  **시술 (Procedure, $T=0$)**: 카테터를 이용한 비침습적 시술(예: TAVI). 수술을 견디기 힘든 **고령(70~80대)이나 고위험군** 환자들이 주로 선택한다.
+데이터를 열어보니 시술군**(**$T=0$)의 사망률이 높다. 하지만 이는 시술군이 고령이기 때문일 수 있다. 더 중요한 것은, "수술이 정말 모든 사람(80대 포함)에게 정답인가?"이다.
 
-데이터를 열어보니 **시술군($T=0$)의 사망률이 압도적으로 높다.**
-이것은 수술이 시술보다 탁월해서일까? 아니면 단순히 시술받은 사람들이 더 늙고 아파서일까? (Selection Bias).
+우리가 알고 있는 임상적 사실들을 기반으로 데이터를 만들어보자. 이번 시뮬레이션의 핵심은 치료 효과의 이질성(Interaction)이다. 대략 나이대에 따라 아래와 같이 데이터를 만들어보겠다. 50대: 수술 시 사망률 감소. \* 70대: 수술과 시술의 효과가 비슷함. \* 고령: 수술 시 오히려 사망률 증가 (수술 위험).
 
-우리의 목표는 '나이(Age)'라는 교란변수를 통제하고, **"수술이 시술보다 정말로 사망률을 낮추는가?"**에 답하는 것이다.
-
----
-
-## 2. R Simulation: 가상 데이터 생성
-
-현실을 모사한 데이터를 만들어보자.
-*   **진실(Ground Truth)**: 수술($T=1$)은 시술($T=0$)에 비해 사망 위험을 낮춘다. (True Effect 존재)
-*   **상황**: 나이가 많을수록 수술보다는 시술을 받으려 한다. 나이가 많을수록 사망 위험은 커진다.
-
-````{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
-library(MatchIt)  # PSM
-library(WeightIt) # IPTW, OW
-library(cobalt)   # Covariate Balance Plot
-library(sandwich) # Robust SE
-library(lmtest)   # Coeftest
+library(MatchIt)
+library(WeightIt)
+library(cobalt)
+library(sandwich)
+library(lmtest)
+library(data.table)
 
-set.seed(2026)
-n <- 3000
+set.seed(1234)
+n <- 50000
 
-# 1. 교란변수 생성: 나이 (Age)
-# 전체 평균 65세, 표준편차 10
-age <- rnorm(n, mean = 65, sd = 10)
+# 1. 교란변수: 나이 (Age)
+age <- rnorm(n, mean = 65, sd = 15)
 
-# 2. 치료 배정 (Treatment Assignment)
-# 나이가 젊을수록(-age) 수술(T=1) 받을 확률이 높음
-# 나이가 50세면 수술 확률 > 90%, 80세면 수술 확률 < 10%
-ps_true <- plogis(10 - 0.15 * age) 
+# 2. 치료 배정
+# 젊을수록 수술 확률 높지만, 너무 극단적이지 않게 설정
+ps_true <- plogis(3 - 0.05 * age) 
 treat <- rbinom(n, 1, ps_true)
 
-# 3. 결과 생성 (Outcome: 1년 내 사망 여부)
-# 기본 사망률은 나이에 비례 (+0.1*age)
-# 수술(treat=1)을 받으면 사망 위험 감소 (-1.5)
-# 노이즈 추가
-mortality_prob <- plogis(-8 + 0.1 * age - 1.0 * treat)
+# 3. 결과 생성 (Outcome)
+trt_logOR <- ifelse(age <= 66, -0.2 * (66 - age), 0.001 * (age - 66)^2)
+mortality_prob <- plogis(-2.4 + 0.07 * (age - 65) + treat * trt_logOR)
 mortality <- rbinom(n, 1, mortality_prob)
 
-df <- tibble(age, treat, mortality)
+df <-tibble(age, treat, mortality)
+dt<- as.data.table(df) 
 
-# 데이터 확인
-df %>%
-  group_by(treat) %>%
-  summarise(
-    n = n(),
-    mean_age = mean(age),
-    mortality_rate = mean(mortality)
-  )
-````
+# 수술군과 비수술군의 평균 나이 비교 
+dt[, .(mean_age = mean(age)), by = treat]
 
-**[실제 데이터 현황]**
-*   **수술군(1)**: 평균 나이 60.3세, 사망률 6.6%
-*   **시술군(0)**: 평균 나이 70.5세, 사망률 30.5%
-*   $ightarrow$ 시술군이 나이가 10살이나 많고, 사망률은 5배 가까이 높다. 단순 비교 시 수술이 압도적으로 좋아 보일 수밖에 없다.
+# 간단한 리스크(사망률) 요약 함수 (가중치 있으면 가중 평균)
+estimate_risk <- function(data, w = NULL) {
+  if (is.null(w)) w <- rep(1, nrow(data))
+  p1 <- weighted.mean(data$mortality[data$treat == 1], w[data$treat == 1])
+  p0 <- weighted.mean(data$mortality[data$treat == 0], w[data$treat == 0])
+  tibble(p_treat = p1, p_control = p0, RD = p1 - p0, RR = p1 / p0)
+}
 
----
+```
 
-## 3. Naive Analysis: 보정하지 않은 결과
+이 데이터 구조에서 ATT (수술받은 사람들의 효과)는 결국 수술받은 사람들(평균 60살 정도의 젊은 연령층)에게서의 수술 vs 시술의 치료효과라고 할 수 있을 것이다. ATE (전체 인구의 효과: 데이터에서 설정한 65세 즉 60세 수술군과 대략 69세 수술군의 평균 인구)에서의 수술 vs 시술의 치료효과라고 할 수 있을 것이다.
 
-먼저 아무런 보정 없이 단순 회귀분석을 돌려보자.
+------------------------------------------------------------------------
 
-````{r}
-# 단순 비교
-fit_naive <- glm(mortality ~ treat, data = df, family = binomial)
-exp(coef(fit_naive))["treat"]
-````
-결과는 **OR 0.16** 수준이다. "수술하면 사망 위험이 84%나 감소한다!"라고 주장한다면 이는 나이 차이(Confounding)를 무시한 엉터리 주장이다.
+## 2. Method 1: Propensity Score Matching
 
----
+우리는 실제로 수술을 선택할 환자들(상대적으로 젊은 연령층)에게 관심이 있다고 생각해보자. 따라서 Propensity Score matching을 통해 시술군(평균 연령 69세)에서 연령이 비교적 젊은, 즉 수술군과 유사한 사람들만을 선별해내는 과정을 진행할것이다
 
-## 4. Method 1: PSM (Target: ATT)
+```{r, message=FALSE, warning=FALSE}
+# 1:1 Matching 
+m_out <- matchit(treat ~ age, data = dt, method = "nearest", ratio = 1, caliper = 0.1)
+matched_data <- as.data.table(match.data(m_out))
+matched_data[,.(mean_age= mean(age)), by = treat]
+```
 
-첫 번째 방법은 **성향점수 매칭(PSM)**이다. 가장 직관적이고 널리 쓰이는 방법이다.
-우리는 **"실제로 수술을 받은 환자들(Treated)"**에게 관심이 있다.
+Matching을 진행한 결과 시술군들의 집단도 상대적으로 젊은 연령(평균 62세)의 사람들만 모집된 것을 알 수 있다.
 
-> **질문 (ATT, Average Treatment Effect on the Treated)**: "이미 수술대에 누운 이 환자들(주로 60세 전후)이, 만약 시술을 받았다면 어땠을까?"
+### 결과 추정 (ATT)
 
-수술군과 비슷한 나이의 시술군을 찾아 짝을 짓는다.
+```{r, message=FALSE, warning=FALSE}
+library(jstable)
+# (1) 매칭된 표본에서의 사망률 차이 (리스크 스케일; ATT에 가까운 해석)
+estimate_risk(matched_data, w = matched_data$weights)
 
-````{r}
-# PS 추정 및 매칭
-m_out <- matchit(treat ~ age, data = df, method = "nearest", ratio = 1)
-matched_data <- match.data(m_out)
+# (2) 참고: OR로 요약 (모형 가정에 민감)
+fit_psm <- glm(mortality ~ treat + age, data = matched_data, weights = matched_data$weights, family = binomial())
+# OR 계산
+tt<- glmshow.display(fit_psm, decimal = 2)
+print(tt)
+```
 
-# 밸런스 확인 (Love Plot)
-love.plot(m_out, binary = "std", thresholds = c(m = .1))
-````
+매칭은 "수술을 받은 사람들(상대적으로 젊은 집단)"을 타겟으로 하였기 때문에 우리가 지금 확인하고 있는 오즈비는 **ATT** 의관점에 가깝다는 것을 알 수 있다. 즉 상대적으로 젊은 집단에서는 수술을 하는 것이 시술을 하는 것에 비해 사망의 위험을 줄여준다고 가정할 수 있다. 하지만 이것이 과연 심장판막 질환을 가진 모든 환자에게 수술을 권하는 데이터로 활용될 수 있을까? 여기서 지금 매칭을 하였기 때문에 실제 평균 연령보다 상대적으로 젊고 건강한 군에서 시행한 데이터라는 것을 알 수 있다.
 
-*   **해석**: 매칭 후 두 그룹의 나이 차이가 거의 0이 되었다.
-*   **주의점**: 수술군과 짝이 될 시술군이 부족한 **70~80대 초고령 수술 환자**나, 짝을 찾지 못한 **초고령 시술 환자**는 분석에서 **버려진다(Discarded)**.
-*   **결과 추정 (ATT)**:
-````{r}
-fit_psm <- glm(mortality ~ treat + age, data = matched_data, family = binomial)
-exp(coef(fit_psm))["treat"]
-````
-결과는 **OR 0.42** 수준이다. 나이를 보정하고 나니, 수술의 효과가 Naive한 분석(0.16)보다는 덜 극적인 것으로 나타났다. 이것이 **"수술을 선택한 집단"**에서의 진짜 수술 효과에 가깝다.
+------------------------------------------------------------------------
 
----
+## 3. Method 2: IPTW (Target: ATE)
 
-## 5. Method 2: IPTW (Target: ATE)
+이번엔 질문을 바꿔보자. **"만약 심장 판막 질환을 진단 받은 전 인구에 대해 수술을 권장한다면?"**
 
-두 번째 방법은 **역확률 가중치(IPTW)**다. 데이터를 버리지 않고 전체를 쓴다.
+```{r, message=FALSE, warning=FALSE}
+w_ate <- weightit(treat ~ age, data = dt, method = "glm", estimand = "ATE")
+summary(w_ate$weights)
 
-> **질문 (ATE, Average Treatment Effect)**: "만약 전 국민(50대부터 80대까지 모두)에게 수술을 시켰다면, 전원 시술을 시켰을 때보다 사망률이 얼마나 낮았을까?"
+# (1) 리스크 스케일: 가중 사망률 차이 (ATE)
+estimate_risk(dt, w = w_ate$weights)
 
-문제는 현실적으로 80세 노인에게 개흉 수술을 시키는 건 불가능에 가깝다는 점이다. 데이터상으로도 80세 수술 환자는 극히 드물다. IPTW는 이 '드문 80세 수술 환자'에게 **어마어마한 가중치(Weight)**를 줘서 억지로 인구 구조를 맞춘다.
+dt[, .(w_mean_age = weighted.mean(age, w_ate$weights)), by = treat]
+# (2) 참고: OR로 요약 (robust SE)
+fit_iptw <- glm(mortality ~ treat+age, data = dt, weights = w_ate$weights, family = binomial())
+glmshow.display(fit_iptw)
 
-````{r}
-# 가중치 생성 (WeightIt 패키지 사용 추천)
-w_iptw <- weightit(treat ~ age, data = df, method = "ps", estimand = "ATE")
+```
 
-# 가중치 분포 확인 - Extreme Weight 주의!
-summary(w_iptw$weights)
+IPTW로 weight를 적용한한 데이터에 대해서 살펴보자. 지금 데이터를 보면 알 수 있듯이 처음에 가정한것 처럼 평균 65세의 심장판막 진단 환자군이라는 것을 알 수 있다. 즉, IPTW는 전체 인구(고령 포함)를 타겟으로 하므로, 결과는 **ATE** 관점이다. 여기서 확인할 수 있는 결과는 심장판막 질환을 진단받은 모든 사람을 대상으로 수술과 시술의 효과를 비교했을 때는 OR이 1 그리고 p-value가 0.578로 두 시술의 효과가 크게 차이가 없다는 것을 알 수 있다.
 
-# 결과 추정 (ATE)
-fit_iptw <- glm(mortality ~ treat, data = df, weights = w_iptw$weights, family = binomial)
-# Robust SE 필수
-coeftest(fit_iptw, vcov = vcovHC(fit_iptw, type = "HC1"))
-exp(coef(fit_iptw))["treat"]
-````
-가중치의 최댓값(Max)이 **90**을 넘는다. 평균 가중치가 2.0 수준인데, 특정 환자 한 명의 가중치가 90배라는 것은 그 한 명의 데이터가 결과에 미치는 영향력이 비정상적으로 크다는 뜻이다. 결과값(OR 0.43) 자체는 PSM과 비슷해 보이지만, 추정의 **불안정성**이 내재되어 있다.
+------------------------------------------------------------------------
 
----
+### 1살(age) 단위 strata에서의 OR (전체 인구)
 
-## 6. 심화: Overlap Weighting (Target: ATO)
+표본이 충분하다면 age를 1살 단위로 나눠서, 각 strata에서 `OR(Surgery vs Procedure)`를 구한 뒤 점을 선으로 이어 보는 방식이 가장 직관적이다.
 
-IPTW의 불안정성(Extreme Weight)을 해결하기 위한 대안으로 **Overlap Weighting (OW)**이 있다.
-이는 분산을 최소화하여 통계적 효율성을 극대화하지만, 그 대가로 우리가 알고 싶은 모집단(ATE, ATT)이 아닌 **'임상적으로 애매한(Equipose) 집단'**이라는 새로운 대상을 정의한다. 이를 **ATO (Average Treatment Effect in the Overlap population)**라고 한다.
+```{r, message=FALSE, warning=FALSE}
+or_by_age1 <- dt %>%
+  as_tibble() %>%
+  mutate(age1 = floor(age)) %>%
+  group_by(age1) %>%
+  group_modify(function(.x, .y) {
+    tab <- table(.x$mortality, .x$treat)
+    if (nrow(tab) < 2 || ncol(tab) < 2 || any(tab < 3)) {
+      return(tibble(or = NA_real_, lo = NA_real_, hi = NA_real_))
+    }
 
-````{r}
-# ATO 가중치 생성
-w_ow <- weightit(treat ~ age, data = df, method = "ps", estimand = "ATO")
+    fit <- glm(mortality ~ treat, data = .x, family = binomial())
+    co <- summary(fit)$coef
+    est <- co["treat", "Estimate"]
+    se <- co["treat", "Std. Error"]
 
-# 가중치 분포 확인 - 매우 안정적
-summary(w_ow$weights)
+    tibble(or = exp(est), lo = exp(est - 1.96 * se), hi = exp(est + 1.96 * se))
+  }) %>%
+  ungroup() %>%
+  filter(!is.na(or))
 
-# 결과 추정 (ATO)
-fit_ow <- glm(mortality ~ treat, data = df, weights = w_ow$weights, family = binomial)
-exp(coef(fit_ow))["treat"]
-````
-가중치가 **0에서 1 사이**로 매우 안정적이다. 결과(OR 0.40) 역시 안정적으로 산출된다. 하지만 "이 결과가 전체 환자에게 적용되는가?"라는 질문에는 "아니오, 수술과 시술 사이에서 고민되는 중간층 환자에게만 해당됩니다"라고 답해야 한다.
+ggplot(or_by_age1, aes(x = age1, y = or)) +
+  geom_ribbon(aes(ymin = lo, ymax = hi), alpha = 0.12) +
+  geom_point(size = 0.9, alpha = 0.8) +
+  geom_line(linewidth = 0.7) +
+  geom_hline(yintercept = 1, linetype = 2) +
+  scale_y_log10() +
+  coord_cartesian(ylim = c(0.2, 5)) +
+  labs(x = "Age (years)", y = "OR (Surgery vs Procedure)")
+```
 
----
+## 4.  상반된 결과의 해석
 
-## 7. 종합 비교: 어떤 숫자를 믿어야 할까?
+ATT와 ATE는 “같은 데이터에서 무엇을 평균낼 것인가”라는 타겟(estimand)이 다르다. 그래서 분석을 시작하기 전에, 내가 답하려는 질문이 “실제로 수술을 받은 판막질환 환자들에게서, 만약 시술을 받았더라면 결과가 어떻게 달라졌을까?”인지(ATT), 아니면 “판막질환 환자 전체를 대상으로, 모두 수술 vs 모두 시술로 무작위 배정한다면 평균적으로 어떻게 달라질까?”인지(ATE)를 먼저 고정하는 게 중요하다.
 
-| 방법론 | Estimand | 해석 | 특징 |
-|:---:|:---:|:---|:---|
-| **PSM** | **ATT** | "수술 받은 환자들(젊은 층)에겐 수술이 이만큼 좋았다." | 가장 직관적. 데이터 손실 발생. |
-| **IPTW** | **ATE** | "모든 환자에게 수술을 시킨다면 이만큼 좋을 것이다." | 가중치 폭발 위험(불안정). 전체 인구 대표. |
-| **OW** | **ATO** | "수술/시술 고민되는 환자들(중년)에겐 수술이 이만큼 좋다." | 통계적으로 가장 안정적. 대상 집단이 바뀜. |
+Propensity score matching(PSM)은 관측된 공변량(예: 나이)의 분포가 수술군과 비슷한 시술군 환자를 골라내서, 결과적으로 “수술을 받는 환자 프로파일(상대적으로 젊고 수술 적응증이 되는 사람)”에 가까운 비교를 만든다. 즉 이 글의 예시에서는 ‘실제로 수술을 받았던 사람들’에게서 수술이 시술보다 어떤지에 가까운 질문을 하게 되고, 그래서 PSM 결과는 보통 ATT에 가까운 해석이 자연스럽다. 반대로 IPTW는 성향점수의 역수로 가중치를 줘 공변량 분포를 맞춘 “가상(population) 표본”을 만들고, 그 위에서 ATE에 가까운 질문(전체 판막 질환 환자에서 수술 vs 시술의 평균 효과)에 답하려는 접근이다. 그렇기 때문에 RCT와 더 유사한 전체 치료효과는 IPTW에서 관찰될 수가 있어서 언뜻 더 이상적인 방법인 것처럼 보인다.
 
-### CATE (Conditional ATE)와 정밀 의료
+다만 여기서 중요한 함정이 positivity(치료 할당의 양성성)다. 이 예시로 말하면 “어떤 나이대(혹은 위험도)에서도 수술과 시술이 모두 일정 확률로 선택될 수 있는가?”가 핵심이다. 현실에서는 초고령(예: 90세) 환자에게는 수술이 거의 선택되지 않을 수 있다. 데이터에서 그런 초고령 수술 환자가 거의 없다면, IPTW는 ‘초고령 시술 환자’를 “수술을 받은 것처럼” 대표시키기 위해 매우 큰 가중치를 부여하게 되고, 그 결과 몇 명의 관측치가 수천 명을 대변하는 상황이 생길 수 있다. 이때 추정치는 불안정해지고, 한두 명의 결과가 결론을 좌우할 위험이 커진다. 그래서 현실 분석에서는 weight trimming, 안정화(stabilization), 혹은 overlap weighting 같은 방법을 함께 고려하며, 결과가 이런 선택에 얼마나 민감한지도 같이 점검하는 편이 안전하다.
 
-결국 "평균적인 효과" 하나만으로는 부족할 때가 많다.
-*   수술은 젊은 사람(ATT 타겟)에게는 효과적이지만, 80세 노인(ATE에 포함됨)에게는 오히려 해로울 수도 있다.
-*   이처럼 환자의 특성($X$)에 따라 치료 효과가 달라지는 것을 **이질성(Heterogeneity)**이라고 하며, 이를 **CATE** 또는 **ITE (Individual Treatment Effect)**라고 한다.
+마지막으로, 판막질환에서도 “나이에 따라 수술의 득과 실이 다를 수 있다”는 점처럼 치료 효과는 개인/집단 특성에 따라 달라질 수 있다(효과 이질성). 한 개인 $i$의 ITE는 $Y_i(1)-Y_i(0)$처럼 정의되지만, 반사실적 결과를 동시에 관측할 수 없어서 직접 “관측”되기보다는 가정과 모형 아래에서 예측의 형태로 다뤄진다. 반면 CATE는 $E[Y(1)-Y(0)\mid X=x]$처럼 조건부 평균 효과를 의미하며, “어떤 하위집단(예: 60대 vs 80대)에서 더 이득/해가 큰가?”에 답한다. 위에서 본 1살 단위 age strata별 OR은 CATE를 아주 단순하게(나이로만 층화) 들여다보는 한 가지 방법이다.
 
-최근의 인과추론 연구는 단순히 ATE/ATT를 구하는 것을 넘어, "누구에게 수술이 이득이고 누구에게 시술이 이득인가?"를 밝혀내는 정밀 의료(Precision Medicine)로 나아가고 있다.
-
-다음 편에서는 이제 이 분석에 **'시간(Time)'** 개념을 섞어보자. 만약 수술은 바로 하는데, 시술은 대기 시간이 길다면? 치료 효과가 시간이 지날수록 변한다면? **Target Trial Emulation**이 필요한 시점이다.
+다음 편에서는 그렇다면 어떤 변수를 교란변수로 보고(혹은 보지 않고), 어떤 원칙으로 조정 집합을 선택해야 하는지에 대해 알아보겠다.

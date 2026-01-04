@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.6.42">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta name="author" content="Anonymous">
+<meta name="author" content="Hyungwoo Jo">
 <meta name="dcterms.date" content="2025-06-27">
 <meta name="description" content="의학 연구에서의 인과추론: 기본 개념">
 <title>Causal Inference (1) – Analytics Notes</title>
@@ -71,7 +71,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-31532e0a7f1fd90059c3306d8d248c7c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap-6cd848dc9278ff8c2bd512f804fe0bcd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -184,7 +184,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Author</div>
       <div class="quarto-title-meta-contents">
-               <p>Anonymous </p>
+               <p><a href="https://github.com/hyungwoo-jo">Hyungwoo Jo</a> </p>
             </div>
     </div>
       
@@ -498,12 +498,12 @@ window.Quarto = {
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_crude</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">death</span> <span class="op">~</span> <span class="va">treatment</span>, data <span class="op">=</span> <span class="va">df</span>, family <span class="op">=</span> <span class="st">"binomial"</span><span class="op">)</span></span>
 <span><span class="va">model_adjusted</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">death</span> <span class="op">~</span> <span class="va">treatment</span> <span class="op">+</span> <span class="va">age</span>, data <span class="op">=</span> <span class="va">df</span>, family <span class="op">=</span> <span class="st">"binomial"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/jstable/man/glmshow.display.html">glmshow.display</a></span><span class="op">(</span><span class="va">model_crude</span><span class="op">)</span><span class="op">$</span><span class="va">table</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://jinseob2kim.github.io/jstable/reference/glmshow.display.html">glmshow.display</a></span><span class="op">(</span><span class="va">model_crude</span><span class="op">)</span><span class="op">$</span><span class="va">table</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                 OR.(95%CI)         P value  
 treatment: Medication vs Surgery "2.24 (2.04,2.45)" "&lt; 0.001"</code></pre>
 </div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/jstable/man/glmshow.display.html">glmshow.display</a></span><span class="op">(</span><span class="va">model_adjusted</span><span class="op">)</span><span class="op">$</span><span class="va">table</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://jinseob2kim.github.io/jstable/reference/glmshow.display.html">glmshow.display</a></span><span class="op">(</span><span class="va">model_adjusted</span><span class="op">)</span><span class="op">$</span><span class="va">table</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                 crude OR.(95%CI)   crude P value
 treatment: Medication vs Surgery "2.24 (2.04,2.45)" "&lt; 0.001"    
@@ -546,12 +546,12 @@ age                              "1.08 (1.07,1.08)" "&lt; 0.001"   </code></pre>
 <span><span class="va">model_crude</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">death</span> <span class="op">~</span> <span class="va">treatment</span>, data <span class="op">=</span> <span class="va">df</span>, family <span class="op">=</span> <span class="st">"binomial"</span><span class="op">)</span></span>
 <span><span class="va">model_adjusted_age_only</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">death</span> <span class="op">~</span> <span class="va">treatment</span> <span class="op">+</span> <span class="va">age</span>, data <span class="op">=</span> <span class="va">df</span>, family <span class="op">=</span> <span class="st">"binomial"</span><span class="op">)</span></span>
 <span><span class="va">model_fully_adjusted</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">death</span> <span class="op">~</span> <span class="va">treatment</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">ses</span>, data <span class="op">=</span> <span class="va">df</span>, family <span class="op">=</span> <span class="st">"binomial"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/jstable/man/glmshow.display.html">glmshow.display</a></span><span class="op">(</span><span class="va">model_crude</span><span class="op">)</span><span class="op">$</span><span class="va">table</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://jinseob2kim.github.io/jstable/reference/glmshow.display.html">glmshow.display</a></span><span class="op">(</span><span class="va">model_crude</span><span class="op">)</span><span class="op">$</span><span class="va">table</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                 OR.(95%CI)         P value  
 treatment: Medication vs Surgery "2.31 (2.09,2.55)" "&lt; 0.001"</code></pre>
 </div>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/jstable/man/glmshow.display.html">glmshow.display</a></span><span class="op">(</span><span class="va">model_adjusted_age_only</span><span class="op">)</span><span class="op">$</span><span class="va">table</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://jinseob2kim.github.io/jstable/reference/glmshow.display.html">glmshow.display</a></span><span class="op">(</span><span class="va">model_adjusted_age_only</span><span class="op">)</span><span class="op">$</span><span class="va">table</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                 crude OR.(95%CI)   crude P value
 treatment: Medication vs Surgery "2.31 (2.09,2.55)" "&lt; 0.001"    
@@ -560,7 +560,7 @@ age                              "1.08 (1.08,1.09)" "&lt; 0.001"
 treatment: Medication vs Surgery "1.13 (1.01,1.26)" "0.034"     
 age                              "1.08 (1.08,1.09)" "&lt; 0.001"   </code></pre>
 </div>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/jstable/man/glmshow.display.html">glmshow.display</a></span><span class="op">(</span><span class="va">model_fully_adjusted</span><span class="op">)</span><span class="op">$</span><span class="va">table</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://jinseob2kim.github.io/jstable/reference/glmshow.display.html">glmshow.display</a></span><span class="op">(</span><span class="va">model_fully_adjusted</span><span class="op">)</span><span class="op">$</span><span class="va">table</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                 crude OR.(95%CI)   crude P value
 treatment: Medication vs Surgery "2.31 (2.09,2.55)" "&lt; 0.001"    
@@ -645,7 +645,7 @@ ses                              "0.5 (0.45,0.56)"  "&lt; 0.001"   </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>--- Biased Analysis with Immortal Time ---</code></pre>
 </div>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/jstable/man/cox2.display.html">cox2.display</a></span><span class="op">(</span><span class="va">biased_model</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://jinseob2kim.github.io/jstable/reference/cox2.display.html">cox2.display</a></span><span class="op">(</span><span class="va">biased_model</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$table
                    HR(95%CI)          P value  
@@ -727,7 +727,7 @@ $caption
 </div>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 2. 로지스틱 회귀분석으로 오즈비 계산</span></span>
 <span><span class="va">model_biased</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">death</span> <span class="op">~</span> <span class="va">treatment</span>, data <span class="op">=</span> <span class="va">df_final</span>, family <span class="op">=</span> <span class="st">"binomial"</span>, model <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/jstable/man/glmshow.display.html">glmshow.display</a></span><span class="op">(</span><span class="va">model_biased</span><span class="op">)</span><span class="op">$</span><span class="va">table</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://jinseob2kim.github.io/jstable/reference/glmshow.display.html">glmshow.display</a></span><span class="op">(</span><span class="va">model_biased</span><span class="op">)</span><span class="op">$</span><span class="va">table</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                      OR.(95%CI)        P value  
 treatment: Prevalent User vs Non-User "0.78 (0.7,0.87)" "&lt; 0.001"</code></pre>
@@ -742,12 +742,13 @@ treatment: Prevalent User vs Non-User "0.78 (0.7,0.87)" "&lt; 0.001"</code></pre
 
 </section><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{jo2025,
   author = {Jo, Hyungwoo},
-  title = {Causal {Inference} (1)},
+  title = {Causal {Inference} (1): {RCT} Vs {RWD}},
   date = {2025-06-27},
   langid = {en}
 }
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-jo2025" class="csl-entry quarto-appendix-citeas" role="listitem">
-Jo, Hyungwoo. 2025. <span>“Causal Inference (1).”</span> June 27, 2025.
+Jo, Hyungwoo. 2025. <span>“Causal Inference (1): RCT Vs RWD.”</span>
+June 27, 2025.
 </div></div></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

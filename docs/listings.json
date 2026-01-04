@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/2026-01-02-propensity-score/index.html",
       "/posts/2025-06-27-causal/index.html",
       "/posts/2025-01-03-comeptingrisk/index.html"
     ]
